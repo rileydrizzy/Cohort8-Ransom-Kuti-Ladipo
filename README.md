@@ -1,2 +1,2 @@
 # Cohort8-Team-Template
-Template for Cohort 8 
+[Some Details about you Team Here]
