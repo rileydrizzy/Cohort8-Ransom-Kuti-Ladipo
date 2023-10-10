@@ -1,11 +1,32 @@
-# Cohort8-Team-Template
+# Project/ App Title
 [This readme should contain details about you team and project. Please Feel free to delete the text below if you forked this repository]
 
-Now that you've formed your groups, it is essential to start brainstorming project ideas as this will be a fundamental part of your project proposal. We have created a team GitHub repository for your team. This is where your team is expected to carry out the projects and submit the [project proposal](project_proposal.md). Your project will involve building an end-to-end data science and machine learning solution in any area of your choosing. In case you're struggling to come up with an idea, you can find a [list of projects](https://docs.google.com/spreadsheets/d/1et7o15BUiBCs06S5DiSzBBW1DmZ6a1pMoyevQE5yxbA/edit#gid=0) to support your decision (please note that these are simply ideas on what you can work on which you may or not choose to work on). You may also consider reviewing projects from [previous cohorts](https://github.com/AISaturdaysLagos/cohort7_projects), but keep in mind that if you choose a past project, you'll need to enhance the previous solution.
+## Project description 
+Write a brief summary about the project here (what problem are you solving , whats your solution) including goals, and key features
+
+## Table of Contents
+
+## Getting Started 
+Explain how to get a copy of the project up and running on a local machine for development and testing purposes
+
+## Installation
+Step-by-step instructions on how to install and set up the project
+
+## Acknowledgments
+List and thank contributors, libraries, or resources that have been used or inspired the project
+
+## Contact
+Provide contact information for the project maintainers or team members
+
+## Requirements:
+Your project should involve the following components:
+- **Data Sourcing:** Web scraping or any other data sourcing method.
+- **Data Cleaning and Prep**: Data Cleaning, preparation and basic statistics reporting
+- **Modeling**: Base Model, Model Comparison, Hyper-parameter Tuning and monitoring with experiment management
+- **Model Deployment :** Deploy on the web or mobile. You can leverage Google Colab/Streamlit/Huggyface where possible.
+- **Requirements.txt**: A file for all dependecies required
 
 ### Here is the timeline for your group projects:
-- Group Communication Channels Creation Deadline: October 1, 2023
-- Project Proposal Deadline: October 15, 2023
 - Project Submission Deadline: December 10, 2023
 - Presentation Day: December 16, 2023
 
