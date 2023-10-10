@@ -1,5 +1,5 @@
 # Project/ App Title
-[This readme should contain details about you team and project. Please Feel free to delete the text below if you forked this repository]
+[This readme should contain details about you team and project. Please Feel free to modify and expand upon this template to suit the specific needs and details of your group project]
 
 ## Project description 
 Write a brief summary about the project here (what problem are you solving , whats your solution) including goals, and key features
