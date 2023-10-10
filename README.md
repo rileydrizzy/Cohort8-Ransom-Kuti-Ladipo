@@ -29,7 +29,3 @@ Your project should involve the following components:
 ### Here is the timeline for your group projects:
 - Project Submission Deadline: December 10, 2023
 - Presentation Day: December 16, 2023
-
-These deadlines are critical to ensure the smooth progression of your project, so please mark them on your calendars.
-
-Thank you for your attention to these details. With your dedication, we are confident that project will be a great success. We wish you success.
