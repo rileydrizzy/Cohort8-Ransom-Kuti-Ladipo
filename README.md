@@ -1,31 +1,54 @@
-# Project/ App Title
+# APP Title
 
-[This readme should contain details about you team and project. Please Feel free to modify and expand upon this template to suit the specific needs and details of your group project]
+[![LICENSE](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.6-blue.svg?style=flat-square)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-1.7.0-orange)](https://pytorch.org/)
+
+![image/gif]()
 
 ## Project description
 
-Write a brief summary about the project here (what problem are you solving , whats your solution) including goals, and key features
+***Overview:*** \
+This project is dedicated to the development of an Automatic Sign Language Translation system, with a specific focus on translating Nigerian Sign Language (NSL) into one of the Low-Resource Languages (LRLs) spoken in Nigeria. The primary objective is to address the communication challenges faced by the NSL community and contribute to inclusivity and employment opportunities in education and the workforce.
 
-## Table of Contents
+***Significance:*** \
+Effective communication is a cornerstone of societal cohesion, and this project addresses a critical gap in the integration of the NSL community into the broader society. Sign language, while vital for the hearing-impaired, often faces limitations in bridging the gap with the larger community. This project seeks to overcome these limitations and promote a more inclusive and understanding society.
 
-n
+***Potential Applications:***
 
-## Getting Started
-
-Explain how to get a copy of the project up and running on a local machine for development and testing purposes
-
-## Installation
-
-Step-by-step instructions on how to install and set up the project
-
-## Acknowledgments
-
-List and thank contributors, libraries, or resources that have been used or inspired the project
-
-## Contact
-
-Provide contact information for the project maintainers or team members
+- ***Education***:
+  - Integration into schools and educational institutions to support hearing-impaired students.
+  - Facilitation of communication in educational settings, creating a more inclusive learning environment.
+- ***Workforce:***
+  - Facilitating communication in the workplace, creating job opportunities for NSL speakers.
+  - Promotion of diversity and inclusion in professional environments.
+- ***Community Involvement:***
+  - Empowering NSL speakers to engage more actively in community activities.
+  - Bridging the gap between the NSL community and the broader society.
 
 ## PROJECT TIMELINE
 
 ![PROJECT TIMELINE]()
+
+### SYSTEM DESIGN
+
+![PLANNED SYSTEM DESIGN]()
+
+## CURRENT PROGRESS
+
+## Citation
+
+## Acknowledgments
+
+I would like to acknowledge the outstanding contributions of:
+
+**Name:** Afonja Tejumade ***(```Mentor```)***  
+**Email:** <tejumade.afonja@aisaturdayslagos.com>  
+**GitHub:** [Afonja Tejumade](https://github.com/tejuafonja)
+
+## Contact
+
+**Name:** Ipadeola Ladipo  
+**Email:** <ipadeolaoladipo@outlook.com>  
+**GitHub:** [Ipadeoa Ladipo](https://github.com/rileydrizzy)  
+**Linkdeln:** [Ipadeoa Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)
