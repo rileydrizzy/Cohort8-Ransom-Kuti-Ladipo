@@ -28,7 +28,7 @@ Effective communication is a cornerstone of societal cohesion, and this project 
 
 ## PROJECT TIMELINE
 
-![PROJECT TIMELINE]()
+![PROJECT TIMELINE](https://github.com/AISaturdaysLagos/Cohort8-Ransom-Kuti-Ladipo/blob/main/images/Project%20Timeline.png)
 
 ### SYSTEM DESIGN
 
