@@ -11,3 +11,6 @@ os.environ["WANDB_LOG_MODEL"]="true"
 
 # turn off watch to log faster
 os.environ["WANDB_WATCH"]="false"
+
+
+
