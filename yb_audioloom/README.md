@@ -28,9 +28,25 @@ In our ongoing pursuit of advancing communication accessibility for Nigerian Sig
 **Future Implications:**
 The successful implementation of this generative AI approach holds promising implications for various applications not only to our main project, including but not limited to improved accessibility in education, enhanced communication tools for diverse linguistic communities, and a more inclusive digital landscape.
 
+## Configuration and Usage
+
+```bash
+# Clone this repository
+$ git clone
+
+# Go into the repository
+$ cd 
+
+# Install dependencies
+$ make setup
+
+# activate virtual enviroment
+$ source $(poetry env info --path)/bin/activate
+```
+
 ## Acknowledgments
 
-I would like to acknowledge the outstanding contributions of:
+I would like to acknowledge the outstanding contributions of :
 
 **Name:** Afonja Tejumade ***(```Mentor```)***  
 **Email:** <tejumade.afonja@aisaturdayslagos.com>  

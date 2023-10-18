@@ -34,13 +34,29 @@ Effective communication is a cornerstone of societal cohesion, and this project 
 
 ![PLANNED SYSTEM DESIGN]()
 
+## Configuration and Usage
+
+```bash
+# Clone this repository
+$ git clone
+
+# Go into the repository
+$ cd 
+
+# Install dependencies
+$ make setup
+
+# activate virtual enviroment
+$ source $(poetry env info --path)/bin/activate
+```
+
 ## CURRENT PROGRESS
 
 ## Citation
 
 ## Acknowledgments
 
-I would like to acknowledge the outstanding contributions of:
+I would like to acknowledge the outstanding contributions of :
 
 **Name:** Afonja Tejumade ***(```Mentor```)***  
 **Email:** <tejumade.afonja@aisaturdayslagos.com>  
@@ -52,7 +68,7 @@ I would like to acknowledge the outstanding contributions of:
 
 ## Contact
 
-**Name:** Ipadeola Ladipo
-**Email:** <ipadeolaoladipo@outlook.com>
+**Name:** **Ipadeola Ladipo**  
+**Email:** <ipadeolaoladipo@outlook.com>  
 **GitHub:** [Ipadeoa Ladipo](https://github.com/rileydrizzy)  
 **Linkdeln:** [Ipadeoa Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)

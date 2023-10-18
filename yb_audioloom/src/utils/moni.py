@@ -1,6 +1,8 @@
+"""doc
+"""
 
 import os
-import wanb
+import wandb
 # set the wandb project where this run will be logged
 os.environ["WANDB_PROJECT"]="yb-audioloom"
 
