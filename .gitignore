@@ -92,8 +92,12 @@ target/
 
 # Data and models
 data/*/*
+yb_audioloom/data/*/*
+signa_tetx/data/*/*
+linguify_yb/data/*/*
 models/*
 !.gitkeep
+
 
 # Develoment Enviroment
 develoment
