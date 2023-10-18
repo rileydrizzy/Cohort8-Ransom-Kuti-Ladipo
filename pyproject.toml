@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "App Title"
+version = "0.1.0"
+description = "A Machine Learning System for Sign Language Video Translation and Speech Generation into Low-Resource Languages (LRLs) in Nigeria"
+authors = ["Ipadeola Ladipo Ezekiel <105759894+rileydrizzy@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+pre-commit = "^3.5.0"
+opendatasets = "^0.1.22"
+loguru = "^0.7.2"
+wandb = "^0.15.12"
+transformers = "^4.34.0"
+pandas = "^2.1.1"
+ray = {extras = ["data", "serve", "train", "tune"], version = "^2.7.1"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
