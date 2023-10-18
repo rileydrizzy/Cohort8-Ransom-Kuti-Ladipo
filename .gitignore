@@ -92,12 +92,18 @@ target/
 
 # Data and models
 data/*/*
-yb_audioloom/data/*/*
-signa_tetx/data/*/*
-linguify_yb/data/*/*
 models/*
 !.gitkeep
 
+# yb_audioloom directory
+yb_audioloom/data/*/*
+yb_audioloom/logs
+
+# signa_tetx directory
+signa_text/data/*/*
+
+# linguify_yb directory
+linguify_yb/data/*/*
 
 # Develoment Enviroment
 develoment
