@@ -12,7 +12,7 @@ setup:
 	poetry shell
 	poetry install
 	poetry add pre-commit
-	poetry run pre-commit install
+	
 	
 precommit:
 	@echo "Running precommit on all files"
