@@ -96,14 +96,16 @@ models/*
 !.gitkeep
 
 # yb_audioloom directory
-yb_audioloom/data/*/*
-yb_audioloom/logs
+yb2audio/data/*/*
+yb2audio/logs
 
 # signa_tetx directory
-signa_text/data/*/*
+signa2text/data/*/*
+signa2text/logs
 
 # linguify_yb directory
 linguify_yb/data/*/*
 
-# Develoment Enviroment
-develoment
+# Development Enviroment
+dev
+dev_env.txt
