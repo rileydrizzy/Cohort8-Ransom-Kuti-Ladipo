@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 
 help:
-	@echo "    setup                p"
+	@echo "    setup                Set up the environment with the required dependencies"
 	@echo "    export               save the dependencies onto the requirements txt file"
 	@echo "    precommit            runs precommit on all files"
 
@@ -12,7 +12,7 @@ setup:
 	poetry shell
 	poetry install
 	poetry add pre-commit
-	
+	@echo "Environment setup complete"	
 	
 precommit:
 	@echo "Running precommit on all files"
@@ -23,5 +23,5 @@ export:
 	poetry export --without-hashes -f requirements.txt --output requirements.txt
 
 backup: # To push to Github without running precommit
-	git commit --no-verify -m "updates"
+	 "updates"
 	git push origin main
