@@ -23,5 +23,5 @@ export:
 	poetry export --without-hashes -f requirements.txt --output requirements.txt
 
 backup: # To push to Github without running precommit
-	 "updates"
+	git commit --no-verify -m "updates"
 	git push origin main
