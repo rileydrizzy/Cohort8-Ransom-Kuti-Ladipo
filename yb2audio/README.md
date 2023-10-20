@@ -39,11 +39,11 @@ $ git clone
 # Install dependencies
 $ make setup
 
-# Go into the repository
-$ cd yb2audio
-
 # activate virtual enviroment
 $ source $(poetry env info --path)/bin/activate
+
+# Go into the repository
+$ cd yb2audio
 ```
 
 ### Data
