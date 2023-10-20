@@ -1,11 +1,9 @@
 """
-Module: Logging Utility
-
 This module provides a simple utility for logging messages to a file and the console.
 logging_utility
 
 Usage:
-- Import the module: `import logger`
+- Import the module: `from utils.logger_util import logger`
 - Log messages with different levels:
   - `logger.debug("Debug message")`
   - `logger.info("Informational message")`
