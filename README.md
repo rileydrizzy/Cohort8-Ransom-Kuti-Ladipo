@@ -1,8 +1,8 @@
 # APP Title
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.6-blue.svg?style=flat-square)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-1.7.0-orange)](https://pytorch.org/)
+[![Python](https://img.shields.io/badge/python-3.10-blue.svg?style=flat-square)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.7.0-orange)](https://pytorch.org/)
 
 ![image/gif]()
 
@@ -34,7 +34,9 @@ Effective communication is a cornerstone of societal cohesion, and this project 
 
 ![PLANNED SYSTEM DESIGN]()
 
-## Configuration and Usage
+## Setup
+
+## Configuration
 
 ```bash
 # Clone this repository
@@ -60,15 +62,15 @@ I would like to acknowledge the outstanding contributions of :
 
 **Name:** Afonja Tejumade ***(```Mentor```)***  
 **Email:** <tejumade.afonja@aisaturdayslagos.com>  
-**GitHub:** [Afonja Tejumade](https://github.com/tejuafonja)
+**GitHub:** [@tejuafonja](https://github.com/tejuafonja)
 
 **Name:** Fola Animashaun ***(```Mentor```)***  
 **Email:** <afolabianimashaun@yahoo.co.uk>  
-**GitHub:** [Fola Animashaun](https://github.com/Modinat-A)
+**GitHub:** [@Modinat-A](https://github.com/Modinat-A)
 
 ## Contact
 
 **Name:** **Ipadeola Ezekiel Ladipo**  
 **Email:** <ipadeolaoladipo@outlook.com>  
-**GitHub:** [Ipadeoa Ladipo](https://github.com/rileydrizzy)  
+**GitHub:** [@rileydrizzy](https://github.com/rileydrizzy)  
 **Linkdeln:** [Ipadeoa Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)
