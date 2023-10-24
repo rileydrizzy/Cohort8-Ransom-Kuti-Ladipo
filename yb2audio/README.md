@@ -70,4 +70,4 @@ I would like to acknowledge the outstanding contributions of :
 **Name:** **Ipadeola Ezekiel Ladipo**  
 **Email:** <ipadeolaoladipo@outlook.com>  
 **GitHub:** [@rileydrizzy](https://github.com/rileydrizzy)  
-**Linkdeln:** [Ipadeoa Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)
+**Linkdeln:** [Ipadeola Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)

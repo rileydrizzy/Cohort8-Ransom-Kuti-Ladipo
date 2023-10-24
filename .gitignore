@@ -109,3 +109,4 @@ linguify_yb/data/*/*
 # Development Enviroment
 dev
 dev_env.txt
+set_environment_variables.sh
