@@ -19,6 +19,7 @@ tensorflow = "^2.14.0"
 torch = "^2.1.0"
 torchaudio = "^2.1.0"
 torchvision = "^0.16.0"
+ipykernel = "^6.26.0"
 
 
 [tool.poetry.group.dev.dependencies]
