@@ -13,7 +13,6 @@ import os
 import opendatasets as opd
 from loguru import logger
 
-# TODO refactor with config.yaml
 URL_ = "https://www.kaggle.com/datasets/rileydrizzy/iroyinspeech"
 DATA_DIR = "data/raw"
 

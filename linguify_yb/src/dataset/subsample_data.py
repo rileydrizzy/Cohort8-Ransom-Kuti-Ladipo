@@ -13,7 +13,7 @@ import os
 import subprocess
 import shutil
 import zipfile
-from loguru import logger # from utils.logger import logger
+from loguru import logger  # from utils.logger import logger
 
 DATA_DIR = "data/raw/"
 data_files = ["train.csv", "character_to_prediction_index.json"]
