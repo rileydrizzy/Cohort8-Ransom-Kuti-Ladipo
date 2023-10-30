@@ -1,6 +1,6 @@
 """Dataset Download Module
 
-This module provides functions to download datasets from a IroyinSpeech dataset.
+This module provides functions to download datasets the IroyinSpeech dataset.
 
 Functions:
 - download_dataset(url: str, destination: str) -> bool:
@@ -39,7 +39,7 @@ def main():
     logger.info(f"Commencing downloading the dataset into {DATA_DIR}")
     try:
         download_dataset_(url=URL_, destination_dir=DATA_DIR)
-        logger.succes(f"Dataset downloaded to {DATA_DIR} successfully.")
+        logger.success(f"Dataset downloaded to {DATA_DIR} successfully.")
     except Exception as error:
         logger.error(f"Dataset download failed due to: {error}")
 
