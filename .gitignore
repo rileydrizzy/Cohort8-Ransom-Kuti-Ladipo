@@ -98,6 +98,7 @@ models/*
 # yb_audioloom directory
 yb2audio/data/*/*
 yb2audio/logs
+yb2audio/development
 
 # signa_tetx directory
 signa2text/data/*/*
@@ -109,4 +110,6 @@ linguify_yb/data/*/*
 # Development Enviroment
 dev
 dev_env.txt
+
+# Keys
 set_environment_variables.sh
