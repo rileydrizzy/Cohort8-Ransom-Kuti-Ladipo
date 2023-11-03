@@ -5,7 +5,7 @@ import torch
 from torch import nn
 
 
-class Token(nn.Module):
+class TokenEmbedding(nn.Module):
     def __init__(self, number_vocab=1000, max_len=100, number_hidden=64):
         super().__init__()
         self.postional_embedding_layers = nn.Embedding(number_vocab, number_hidden)
@@ -20,7 +20,7 @@ class Token(nn.Module):
         return input_x + positions
 
 
-class Landmark_Em(nn.Module):
+class LandmarkEmbedding(nn.Module):
     def __init__(self, number_hidden=64, max_len=100):
         super().__init__()
         self.conv1 = nn.Conv1d(
@@ -56,13 +56,30 @@ class Landmark_Em(nn.Module):
 
 class Transformer(nn.Module):
     def __init__(
-        self, input_dim, output_dim, nhead, num_encoder_layers, num_decoder_layers
+        self,
+        input_dim,
+        source_maxlen=100,
+        target_maxlen=100,
+        no_multi_heads=6,
+        feed_forward_dim=30,
     ):
-        super(Transformer, self).__init__()
+        super().__init__()
+        num_encoder_layers = num_decoder_layers = 6
 
         # Define encoder and decoder layers
-        self.encoder_layer = nn.TransformerEncoderLayer(d_model=input_dim, nhead=nhead)
-        self.decoder_layer = nn.TransformerDecoderLayer(d_model=input_dim, nhead=nhead)
+        self.encoder_layer = nn.TransformerEncoderLayer(
+            d_model=input_dim,
+            nhead=no_multi_heads,
+            dim_feedforward=feed_forward_dim,
+            activation="relu",
+        )
+
+        self.decoder_layer = nn.TransformerDecoderLayer(
+            d_model=input_dim,
+            nhead=no_multi_heads,
+            dim_feedforward=feed_forward_dim,
+            activation="relu",
+        )
 
         # Define encoder and decoder
         self.transformer_encoder = nn.TransformerEncoder(
@@ -73,30 +90,38 @@ class Transformer(nn.Module):
         )
 
         # Input and output linear layers
-        self.input_linear = nn.Linear(input_dim, input_dim)
-        self.output_linear = nn.Linear(input_dim, output_dim)
+        self.input_linear = LandmarkEmbedding(max_len=source_maxlen)
+        self.target_linear = TokenEmbedding(max_len=target_maxlen)
+        self.num_classes = 60
+        self.output_linear = nn.Linear(input_dim, self.num_classes)
 
-    def forward(self, src, tgt):
-        # Apply linear layer to the input
-        src = self.input_linear(src)
+    def forward(self, input_x, input_y):
+        # Apply EMbedding
+        input_x = self.input_linear(input_x)
 
         # Transformer encoding
-        memory = self.transformer_encoder(src)
+        memory = self.transformer_encoder(input_x)
 
         # Apply linear layer to the target
-        tgt = self.input_linear(tgt)
+        input_y = self.target_linear(input_y)
 
         # Transformer decoding
-        output = self.transformer_decoder(tgt, memory)
+        output = self.transformer_decoder(input_y, memory)
 
         # Apply linear layer to the output
         output = self.output_linear(output)
 
         return output
 
+    # TODO code generate for inference
+    def generate(
+        self,
+    ):
+        pass
+
 
 # Example usage:
-def test_func(Transformer_):
+def test_func(transformer_model):
     input_dim = 512  # Adjust based on your input dimension
     output_dim = 256  # Adjust based on your output dimension
     nhead = 8
@@ -104,7 +129,7 @@ def test_func(Transformer_):
     num_decoder_layers = 6
 
     # Instantiate the model
-    model = Transformer_(
+    model = transformer_model(
         input_dim, output_dim, nhead, num_encoder_layers, num_decoder_layers
     )
 

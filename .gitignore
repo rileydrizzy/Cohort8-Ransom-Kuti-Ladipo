@@ -95,20 +95,24 @@ data/*/*
 models/*
 !.gitkeep
 
+# linguify_yb directory
+linguify_yb/data/*/*
+linguify_yb/logs
+linguify_yb/development
+
+# signa_tetx directory
+signa2text/data/*/*
+signa2text/logs
+signa2texto/development
+
 # yb_audioloom directory
 yb2audio/data/*/*
 yb2audio/logs
 yb2audio/development
 
-# signa_tetx directory
-signa2text/data/*/*
-signa2text/logs
-
-# linguify_yb directory
-linguify_yb/data/*/*
-
 # Development Enviroment
 dev
+development
 dev_env.txt
 
 # Keys

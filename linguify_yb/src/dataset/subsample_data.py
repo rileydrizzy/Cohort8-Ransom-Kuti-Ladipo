@@ -10,9 +10,10 @@ Functions:
 
 
 import os
-import subprocess
 import shutil
+import subprocess
 import zipfile
+
 from loguru import logger  # from utils.logger import logger
 
 DATA_DIR = "data/raw/"
@@ -52,9 +53,9 @@ def check_storage(project_dir=os.getcwd()):
         exception for when storage is full.
     """
     total, used, free = shutil.disk_usage(project_dir)
-    total_size_gb = round(total / (2**30), 2)
-    used_size_gb = round(used / (2**30), 2)
-    free_size_gb = round(free / (2**30), 2)
+    total_size_gb = round(total / (2 ** 30), 2)
+    used_size_gb = round(used / (2 ** 30), 2)
+    free_size_gb = round(free / (2 ** 30), 2)
     if used_size_gb / total_size_gb >= 0.8:
         raise StorageFullError
     return free_size_gb
