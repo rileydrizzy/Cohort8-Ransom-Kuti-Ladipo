@@ -1,8 +1,8 @@
 """doc
 """
 
-from torch import nn
 import torch
+from torch import nn
 
 
 class Token(nn.Module):
