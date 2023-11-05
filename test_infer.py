@@ -16,3 +16,4 @@ mms_model = VitsModel.from_pretrained(mms_model_name)
 mms_tokenizer = AutoTokenizer.from_pretrained(mms_model_name)
 nllb_tokenizer = AutoTokenizer.from_pretrained(nllb_model_name)
 nllb_model = AutoModelForSeq2SeqLM.from_pretrained(nllb_model_name)
+new
