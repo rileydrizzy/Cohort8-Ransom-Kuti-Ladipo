@@ -12,6 +12,7 @@ setup:
 	poetry shell
 	poetry install
 	poetry add pre-commit
+	python pre-commit install
 	@echo "Environment setup complete"	
 	
 precommit:

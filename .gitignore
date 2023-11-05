@@ -97,22 +97,22 @@ models/*
 
 # linguify_yb directory
 linguify_yb/data/*/*
-linguify_yb/logs
-linguify_yb/development
+#linguify_yb/logs
+#linguify_yb/development
 
 # signa_tetx directory
 signa2text/data/*/*
-signa2text/logs
-signa2texto/development
+#signa2text/logs
+#signa2texto/development
 
 # yb_audioloom directory
 yb2audio/data/*/*
-yb2audio/logs
-yb2audio/development
+#yb2audio/logs
+#yb2audio/development
 
 # Development Enviroment
-dev
-development
+#dev
+#development
 dev_env.txt
 
 # Keys

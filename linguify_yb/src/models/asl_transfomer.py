@@ -6,13 +6,13 @@ from torch import nn
 
 
 class TokenEmbedding(nn.Module):
-    def __init__(self, number_vocab=1000, max_len=100, number_hidden=64):
+    def __init__(self, number_vocab=60 , max_len=100, embedding_dim=64):
         super().__init__()
-        self.postional_embedding_layers = nn.Embedding(number_vocab, number_hidden)
-        self.embedding_layers = nn.Embedding(max_len, number_hidden)
+        self.postional_embedding_layers = nn.Embedding(number_vocab, embedding_dim)
+        self.embedding_layers = nn.Embedding(max_len, embedding_dim)
 
     def forward(self, input_x):
-        max_len = torch.tensor.size(input_x)[-1]
+        max_len = input_x.size()[-1]
         input_x = self.embedding_layers(input_x)
         # Generate positions using torch.arange
         positions = torch.arange(0, max_len)
@@ -21,32 +21,32 @@ class TokenEmbedding(nn.Module):
 
 
 class LandmarkEmbedding(nn.Module):
-    def __init__(self, number_hidden=64, max_len=100):
+    def __init__(self, input_dim = None, number_hidden=64, max_len=100):
         super().__init__()
         self.conv1 = nn.Conv1d(
-            in_channels=number_hidden,
-            out_channels=11,
-            kernel_size=2,
+            in_channels=input_dim,
+            out_channels=number_hidden,
+            kernel_size=11,
             padding="same",
-            stride=2,
+            stride=1,
         )
         self.conv2 = nn.Conv1d(
             in_channels=number_hidden,
-            out_channels=11,
-            kernel_size=2,
+            out_channels=number_hidden,
+            kernel_size=11,
             padding="same",
-            stride=2,
+            stride=1,
         )
         self.conv3 = nn.Conv1d(
             in_channels=number_hidden,
-            out_channels=11,
-            kernel_size=2,
+            out_channels=number_hidden,
+            kernel_size=11,
             padding="same",
-            stride=2,
+            stride=1,
         )
         self.postions_embedding_layers = nn.Embedding(max_len, number_hidden)
         self.seq_nn = nn.Sequential(
-            [self.conv1(), nn.ReLU(), self.conv2(), nn.ReLU(), self.conv3(), nn.ReLU()]
+            self.conv1, nn.ReLU(), self.conv2, nn.ReLU(), self.conv3, nn.ReLU()
         )
 
     def forward(self, input_x):
@@ -58,26 +58,26 @@ class Transformer(nn.Module):
     def __init__(
         self,
         input_dim,
+        output_dim,
         source_maxlen=100,
         target_maxlen=100,
         no_multi_heads=6,
-        feed_forward_dim=30,
     ):
         super().__init__()
         num_encoder_layers = num_decoder_layers = 6
-
+        encoder_forward_dim = 100
         # Define encoder and decoder layers
         self.encoder_layer = nn.TransformerEncoderLayer(
             d_model=input_dim,
             nhead=no_multi_heads,
-            dim_feedforward=feed_forward_dim,
+            dim_feedforward=encoder_forward_dim,
             activation="relu",
         )
 
         self.decoder_layer = nn.TransformerDecoderLayer(
             d_model=input_dim,
             nhead=no_multi_heads,
-            dim_feedforward=feed_forward_dim,
+            dim_feedforward=output_dim,
             activation="relu",
         )
 
@@ -90,10 +90,10 @@ class Transformer(nn.Module):
         )
 
         # Input and output linear layers
-        self.input_linear = LandmarkEmbedding(max_len=source_maxlen)
+        self.input_linear = LandmarkEmbedding(input_dim=input_dim,max_len=source_maxlen)
         self.target_linear = TokenEmbedding(max_len=target_maxlen)
         self.num_classes = 60
-        self.output_linear = nn.Linear(input_dim, self.num_classes)
+        self.output_linear = nn.Linear(output_dim, self.num_classes)
 
     def forward(self, input_x, input_y):
         # Apply EMbedding
@@ -118,30 +118,3 @@ class Transformer(nn.Module):
         self,
     ):
         pass
-
-
-# Example usage:
-def test_func(transformer_model):
-    input_dim = 512  # Adjust based on your input dimension
-    output_dim = 256  # Adjust based on your output dimension
-    nhead = 8
-    num_encoder_layers = 6
-    num_decoder_layers = 6
-
-    # Instantiate the model
-    model = transformer_model(
-        input_dim, output_dim, nhead, num_encoder_layers, num_decoder_layers
-    )
-
-    # Create dummy input
-    src = torch.randn((10, 32, input_dim))  # (sequence_length, batch_size, input_dim)
-    tgt = torch.randn((20, 32, input_dim))  # (sequence_length, batch_size, input_dim)
-
-    # Forward pass
-    output = model(src, tgt)
-
-    # Print the output shape
-    print("Output shape:", output.shape)
-
-
-test_func(Transformer)

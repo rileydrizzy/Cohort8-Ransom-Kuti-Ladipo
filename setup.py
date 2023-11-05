@@ -4,7 +4,7 @@ NSL2AUDIO
 A Machine Learning System for Sign Language Video Translation and Speech Generation 
 into Low-Resource Languages (LRLs) in Nigeria
 """
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 with open("README.md", "r", encoding="UTF-8") as f:
     long_description = f.read()
