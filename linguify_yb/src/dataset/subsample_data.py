@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import zipfile
 
-from loguru import logger  # from utils.logger import logger
+from linguify_yb.src.utils.logger_util import logger
 
 DATA_DIR = "data/raw/"
 data_files = ["train.csv", "character_to_prediction_index.json"]
