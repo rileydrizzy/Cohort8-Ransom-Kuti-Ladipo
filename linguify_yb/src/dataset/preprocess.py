@@ -1,13 +1,16 @@
 """doc
 """
 import torch
-from linguify_yb.src.dataset.frames_config import FRAME_LEN, RHAND_IDX, LHAND_IDX, \
-    LPOSE_IDX, RPOSE_IDX
 
-# TODO Clean up code, add s and docs
+from linguify_yb.src.dataset.frames_config import (FRAME_LEN, LHAND_IDX,
+                                                   LPOSE_IDX, RHAND_IDX,
+                                                   RPOSE_IDX)
+
+# TODO Clean up code, add comments and docs
 # TODO remove print and debug statements
 
 # Preprocess frame
+
 
 def resize_pad(x):
     if x.shape[0] < FRAME_LEN:

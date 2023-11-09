@@ -2,11 +2,11 @@
 """
 
 import torch
-from torch import nn
+import torch.nn as nn
 
 
 class TokenEmbedding(nn.Module):
-    def __init__(self, number_vocab=60 , max_len=100, embedding_dim=64):
+    def __init__(self, number_vocab=60, max_len=100, embedding_dim=64):
         super().__init__()
         self.postional_embedding_layers = nn.Embedding(number_vocab, embedding_dim)
         self.embedding_layers = nn.Embedding(max_len, embedding_dim)
@@ -21,7 +21,7 @@ class TokenEmbedding(nn.Module):
 
 
 class LandmarkEmbedding(nn.Module):
-    def __init__(self, input_dim = None, number_hidden=64, max_len=100):
+    def __init__(self, input_dim=None, number_hidden=64, max_len=100):
         super().__init__()
         self.conv1 = nn.Conv1d(
             in_channels=input_dim,
@@ -90,7 +90,9 @@ class Transformer(nn.Module):
         )
 
         # Input and output linear layers
-        self.input_linear = LandmarkEmbedding(input_dim=input_dim,max_len=source_maxlen)
+        self.input_linear = LandmarkEmbedding(
+            input_dim=input_dim, max_len=source_maxlen
+        )
         self.target_linear = TokenEmbedding(max_len=target_maxlen)
         self.num_classes = 60
         self.output_linear = nn.Linear(output_dim, self.num_classes)
@@ -118,3 +120,7 @@ class Transformer(nn.Module):
         self,
     ):
         pass
+
+
+def build_model():
+    pass

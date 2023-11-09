@@ -2,15 +2,16 @@
 """
 
 import json
-import pandas as pd
-import torch
-import pyarrow.parquet as pq
+
 import numpy as np
+import pandas as pd
+import pyarrow.parquet as pq
+import torch
+from torch.utils.data import DataLoader, Dataset
 
-from torch.utils.data import Dataset, DataLoader
+from linguify_yb.src.dataset.frames_config import (FEATURE_COLUMNS, LHAND_IDX,
+                                                   RHAND_IDX)
 from linguify_yb.src.dataset.preprocess import frames_preprocess
-from linguify_yb.src.dataset.frames_config import FEATURE_COLUMNS, RHAND_IDX, LHAND_IDX
-
 
 PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
 METADATA = "data/raw/train.csv"
@@ -107,7 +108,7 @@ def pack_collate_func(batch):
     return frames_feature, phrase
 
 
-def get_dataset(file_path, file_id):
+def get_dataloader(file_path, file_id):
     lookup_table = StaticHashTable(character_to_num, num_to_character)
     dataset = CustomDataset(file_path, file_id, lookup_table, transform=True)
 
