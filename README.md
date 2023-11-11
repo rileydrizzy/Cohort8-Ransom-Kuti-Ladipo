@@ -1,4 +1,4 @@
-# APP Title
+# NSL2AUDIOO
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10-blue.svg?style=flat-square)](https://www.python.org/)
@@ -52,7 +52,11 @@ $ make setup
 $ source $(poetry env info --path)/bin/activate
 ```
 
-## CURRENT PROGRESS
+## Planned Task
+
+Here's a glimpse of the exciting features we plan to implement in the coming weeks:
+
+
 
 ## Citation
 

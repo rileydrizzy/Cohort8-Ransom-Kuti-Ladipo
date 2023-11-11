@@ -95,18 +95,25 @@ data/*/*
 models/*
 !.gitkeep
 
-# yb_audioloom directory
-yb2audio/data/*/*
-yb2audio/logs
+# linguify_yb directory
+linguify_yb/data/*/*
+#linguify_yb/logs
+#linguify_yb/development
 
 # signa_tetx directory
 signa2text/data/*/*
-signa2text/logs
+#signa2text/logs
+#signa2texto/development
 
-# linguify_yb directory
-linguify_yb/data/*/*
+# yb_audioloom directory
+yb2audio/data/*/*
+#yb2audio/logs
+#yb2audio/development
 
 # Development Enviroment
-dev
+#dev
+#development
 dev_env.txt
+
+# Keys
 set_environment_variables.sh

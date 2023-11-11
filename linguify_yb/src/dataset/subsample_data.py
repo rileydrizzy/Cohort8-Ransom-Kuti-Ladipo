@@ -1,6 +1,6 @@
 """Dataset Download Module
 
-This module provides functions to download the Google dataset.
+This module provides functions to download the a subsample of Google ASL dataset.
 
 Functions:
 - download_dataset(url: str, destination: str, path):
@@ -8,13 +8,14 @@ Functions:
 - main - the main function to run the script
 """
 
-import os
-import subprocess
-import shutil
-import zipfile
-from loguru import logger  # from utils.logger import logger
 
-# TODO Clean up code and complete doc
+import os
+import shutil
+import subprocess
+import zipfile
+
+from linguify_yb.src.utils.logger_util import logger
+
 DATA_DIR = "data/raw/"
 data_files = ["train.csv", "character_to_prediction_index.json"]
 train_landmarks = ["1019715464.parquet", "1021040628.parquet", "105143404.parquet"]
@@ -33,48 +34,50 @@ COMMAND = [
 ]
 
 
-def check_storage(project=os.getcwd()):
-    """_summary_
+def check_storage(project_dir=os.getcwd()):
+    """check and return availabe storage space
 
     Parameters
     ----------
-    directory_path : _type_
-        _description_
+    directory_path : str, Path
+        current working directory/directory path
 
     Returns
     -------
-    _type_
-        _description_
+    int
+        the size of available storage space (GB)
 
     Raises
     ------
     StorageFullError
-        _description_
+        exception for when storage is full.
     """
-    total, used, free = shutil.disk_usage(project)
-    total_size_gb = round(total / (2**30), 2)
-    used_size_gb = round(used / (2**30), 2)
-    free_size_gb = round(free / (2**30), 2)
+    total, used, free = shutil.disk_usage(project_dir)
+    total_size_gb = round(total / (2 ** 30), 2)
+    used_size_gb = round(used / (2 ** 30), 2)
+    free_size_gb = round(free / (2 ** 30), 2)
     if used_size_gb / total_size_gb >= 0.8:
         raise StorageFullError
-    else:
-        return free_size_gb
+    return free_size_gb
+
 
 class StorageFullError(Exception):
     """Custom exception for when storage is full."""
 
     pass
+
+
 def downlaod_file(cmd, unzipped_file_path, data_dir):
-    """_summary_
+    """Download file using kaggle API
 
     Parameters
     ----------
-    cmd : _type_
-        _description_
-    unzipped_file : _type_
-        _description_
-    data_dir : _type_
-        _description_
+    cmd : list
+        Kaggle API Commands
+    unzipped_file : str, Path
+        path of the unzipped file
+    data_dir : str, Path
+        the directory where the data should be downloaded into
     """
     subprocess.run(cmd, check=True, text=True)
     if (
@@ -90,25 +93,27 @@ def downlaod_file(cmd, unzipped_file_path, data_dir):
 
 
 def main():
-    """_summary_"""
-    logger.info("Commencing the data unzipping process")
+    """the main function to run the script"""
+    logger.info("Commencing downloading the dataset")
     try:
+        logger.info(f"Current Available space {check_storage()}GB")
         for file in data_files:
-            logger.info(f"Downloading {file} in {DATA_DIR}")
+            logger.info(f"Downloading{file} in {DATA_DIR}")
             COMMAND[6] = file
             unzipfile_path = DATA_DIR + file + ".zip"
             downlaod_file(COMMAND, unzipfile_path, DATA_DIR)
             logger.info(f" {file} downloaded succesful")
-        # c
+        # Downloading the LANDMARKS files
         for parquet_file in train_landmarks:
+            logger.info(f"Current Available space {check_storage()}GB")
             file_path = TRAIN_LANDMARKS_DIR + parquet_file
             COMMAND[6] = file_path
             COMMAND[8] = DATA_DIR + TRAIN_LANDMARKS_DIR
             unzipfile_path = DATA_DIR + file_path + ".zip"
             downlaod_file(COMMAND, unzipfile_path, DATA_DIR + TRAIN_LANDMARKS_DIR)
-            logger.info(f"{parquet_file} downloaded succesful")
+            logger.info(f"{parquet_file} downloaded succesfully")
 
-        logger.success("All files downloaded succesful")
+        logger.success("All files downloaded succesfully")
 
     except Exception as error:
         logger.error(f"failed due to {error}")

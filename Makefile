@@ -12,11 +12,12 @@ setup:
 	poetry shell
 	poetry install
 	poetry add pre-commit
+	python pre-commit install
 	@echo "Environment setup complete"	
 	
 precommit:
 	@echo "Running precommit on all files"
-	pre-commit run --all-files
+	python pre-commit run --all-files
 
 export:
 	@echo "Exporting dependencies to requirements file"
