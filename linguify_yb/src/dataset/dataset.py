@@ -108,11 +108,11 @@ def pack_collate_func(batch):
     return frames_feature, phrase
 
 
-def get_dataloader(file_path, file_id):
+def get_dataloader(file_path, file_id, batch_size):
     lookup_table = StaticHashTable(character_to_num, num_to_character)
     dataset = CustomDataset(file_path, file_id, lookup_table, transform=True)
 
     dataloader = DataLoader(
-        dataset, batch_size=16, num_workers=2, collate_fn=pack_collate_func
+        dataset, batch=batch_size, num_workers=2, collate_fn=pack_collate_func
     )
     return dataloader

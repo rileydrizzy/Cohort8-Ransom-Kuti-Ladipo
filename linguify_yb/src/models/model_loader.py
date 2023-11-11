@@ -1,30 +1,33 @@
 """doc
 
 """
-from linguify_yb.src.models import asl_transfomer
+from linguify_yb.src.models import asl_transfomer, test_model
 
 
 class ModelLoader:
-    """_summary_"""
+    """Model Loader"""
 
     def __init__(self):
-        self.models = {"asl_transfomer": asl_transfomer.build_model()}
+        self.models = {
+            "asl_transfomer": asl_transfomer.build_model(),
+            "test_model": test_model.build_model(),
+        }
 
     def get_model(self, model_name):
-        """_summary_
+        """build and retrieve the model instance
 
         Parameters
         ----------
         model_name : str
-            _description_
+            model name
 
         Returns
         -------
         object
-            returns model
+            return built model instance
         """
 
         if model_name in self.models:
             return self.models[model_name]
         else:
-            return False
+            raise ValueError

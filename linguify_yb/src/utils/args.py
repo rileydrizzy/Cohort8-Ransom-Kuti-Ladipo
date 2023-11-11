@@ -16,6 +16,14 @@ def parse_args():
     )
 
     parser.add_argument(
+        "--model",
+        default="asl_transfomer",
+        type=str,
+        metavar="N",
+        help="name of model to train",
+    )
+
+    parser.add_argument(
         "--epochs",
         default=2,
         type=int,
@@ -29,3 +37,5 @@ def parse_args():
         metavar="N",
         help="number of data samples in one batch",
     )
+    args = parser.parse_args()
+    return args
