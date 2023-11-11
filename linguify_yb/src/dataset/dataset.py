@@ -9,8 +9,7 @@ import pyarrow.parquet as pq
 import torch
 from torch.utils.data import DataLoader, Dataset
 
-from linguify_yb.src.dataset.frames_config import (FEATURE_COLUMNS, LHAND_IDX,
-                                                   RHAND_IDX)
+from linguify_yb.src.dataset.frames_config import FEATURE_COLUMNS, LHAND_IDX, RHAND_IDX
 from linguify_yb.src.dataset.preprocess import frames_preprocess
 
 PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
@@ -113,6 +112,10 @@ def get_dataloader(file_path, file_id, batch_size):
     dataset = CustomDataset(file_path, file_id, lookup_table, transform=True)
 
     dataloader = DataLoader(
-        dataset, batch=batch_size, num_workers=2, collate_fn=pack_collate_func
+        dataset,
+        batch=batch_size,
+        num_workers=2,
+        collate_fn=pack_collate_func,
+        pin_memory=True,
     )
     return dataloader

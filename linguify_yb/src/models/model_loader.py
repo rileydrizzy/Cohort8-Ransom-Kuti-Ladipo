@@ -1,7 +1,7 @@
 """doc
 
 """
-from linguify_yb.src.models import asl_transfomer, test_model
+from linguify_yb.src.models import baseline_transfomer, test_model
 
 
 class ModelLoader:
@@ -9,7 +9,7 @@ class ModelLoader:
 
     def __init__(self):
         self.models = {
-            "asl_transfomer": asl_transfomer.build_model(),
+            "asl_transfomer": baseline_transfomer.build_model(),
             "test_model": test_model.build_model(),
         }
 
