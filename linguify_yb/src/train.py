@@ -30,7 +30,7 @@ MODEL_DIR = "model_dir"
 parquet_files = glob.glob(f"{LANDMARK_DIR}/*.parquet")
 file_ids = [os.path.basename(file) for file in parquet_files]
 assert len(parquet_files) == len(file_ids), "Failed Import of Files"
-TRAIN_FILES = zip(parquet_files, file_ids)
+TRAIN_FILES = list(zip(parquet_files, file_ids))
 
 
 def train(model, optim, loss_func, n_epochs, batch, device):
