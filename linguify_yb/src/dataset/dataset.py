@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader, Dataset
 from linguify_yb.src.dataset.frames_config import FEATURE_COLUMNS, LHAND_IDX, RHAND_IDX
 from linguify_yb.src.dataset.preprocess import frames_preprocess
 
-PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
+PHRASE_PATH = "data/raw/character_to_prediction_index.json"
 METADATA = "data/raw/train.csv"
 
 with open(PHRASE_PATH, "r", encoding="utf-8") as f:
@@ -92,7 +92,7 @@ class LandmarkDataset(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
-        phrase = self.labels[idx]
+        phrase = self.labels[idx][0] # TODO remove bug
         frames = self.frames[idx]
 
         if self.trans:
