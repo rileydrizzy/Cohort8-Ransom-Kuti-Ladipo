@@ -4,6 +4,8 @@ import random
 import numpy as np
 import torch
 
+# import torch_xla.core.xla_model as xm
+
 
 def set_seed(seed: int = 42) -> None:
     np.random.seed(seed)
@@ -17,6 +19,9 @@ def set_seed(seed: int = 42) -> None:
     os.environ["PYTHONHASHSEED"] = str(seed)
 
 
-def get_device_strategy():
-    device = torch.device("cuda" if torch.cuda.is_availabe() else "cpu")
+def get_device_strategy(tpu=False):
+    if tpu:
+        device = xm.xla_device()
+    else:
+        device = torch.device("cuda" if torch.cuda.is_availabe() else "cpu")
     return device

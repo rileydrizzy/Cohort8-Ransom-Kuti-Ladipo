@@ -9,8 +9,7 @@ import pyarrow.parquet as pq
 import torch
 from torch.utils.data import DataLoader, Dataset
 
-from linguify_yb.src.dataset.frames_config import (FEATURE_COLUMNS, LHAND_IDX,
-                                                   RHAND_IDX)
+from linguify_yb.src.dataset.frames_config import FEATURE_COLUMNS, LHAND_IDX, RHAND_IDX
 from linguify_yb.src.dataset.preprocess import frames_preprocess
 
 PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
@@ -67,7 +66,7 @@ def read_file(file, file_id, landmarks_metadata_path):
     return (frames_list, phrase_list)
 
 
-class CustomDataset(Dataset):
+class LandmarkDataset(Dataset):
     def __init__(self, file_path, file_id, table, transform=False):
         self.landmarks_metadata_path = METADATA
         self.frames, self.labels = read_file(
@@ -110,9 +109,36 @@ def pack_collate_func(batch):
 
 def get_dataloader(file_path, file_id, batch_size):
     lookup_table = StaticHashTable(character_to_num, num_to_character)
-    dataset = CustomDataset(file_path, file_id, lookup_table, transform=True)
+    dataset = LandmarkDataset(file_path, file_id, lookup_table, transform=True)
 
     dataloader = DataLoader(
-        dataset, batch=batch_size, num_workers=2, collate_fn=pack_collate_func
+        dataset,
+        batch_size=batch_size,
+        num_workers=2,
+        collate_fn=pack_collate_func,
+        pin_memory=True,
     )
+    return dataloader
+
+
+# Test training pipeline
+class TestDataset(Dataset):
+    """test"""
+    def __init__(self, num_samples=1000, input_size=10):
+        self.num_samples = num_samples
+        self.input_size = input_size
+        self.data = torch.randn(num_samples, input_size)
+        self.labels = torch.randint(0, 2, (num_samples,))
+
+    def __len__(self):
+        return self.num_samples
+
+    def __getitem__(self, idx):
+        return self.data[idx], self.labels[idx]
+
+
+def get_test_dataloader():
+    # Generating a dataset with 1000 samples and 10 input features
+    dataset = TestDataset(num_samples=1000, input_size=10)
+    dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
     return dataloader
