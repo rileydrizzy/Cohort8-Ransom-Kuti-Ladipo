@@ -16,20 +16,24 @@ import torch
 import wandb
 from torch import nn, optim
 
-from linguify_yb.src.dataset.dataset import get_dataloader
+from linguify_yb.src.dataset.dataset import get_dataloader,TEST_LOADER
 from linguify_yb.src.models.model_loader import ModelLoader
 from linguify_yb.src.utils import get_device_strategy, parse_args, set_seed
 from linguify_yb.src.utils.logger_util import logger
 
 try:
-    LANDMARK_DIR = "data/raw/asl"
-    MODEL_DIR = "model_dir"
+    LANDMARK_DIR = "/kaggle/input/asl-fingerspelling/train_landmarks"
+    MODEL_DIR = "/kaggle/working/model_dir"
     parquet_files = glob.glob(f"{LANDMARK_DIR}/*.parquet")
     file_ids = [os.path.basename(file) for file in parquet_files]
+    file_ids = [int(file_name.replace(".parquet", "")) for file_name in file_ids]
     assert len(parquet_files) == len(file_ids), "Failed Import of Files"
     TRAIN_FILES = list(zip(parquet_files, file_ids))
 except AssertionError as asset_error:
     logger.info(f"fail {asset_error}")
+
+# TODO For Debugging
+TRAIN_FILES = TRAIN_FILES[:2]
 
 
 def train(model, optim, loss_func, n_epochs, batch, device):
@@ -37,19 +41,22 @@ def train(model, optim, loss_func, n_epochs, batch, device):
     set_seed()
     train_losses = []
     val_losses = []
-    val_dataloader = get_dataloader(TRAIN_FILES[0], TRAIN_FILES[1], batch_size=batch)
+    val_dataloader = TEST_LOADER  # get_dataloader(TRAIN_FILES[0][0], TRAIN_FILES[0][1], batch_size=batch)
 
     for epoch in range(n_epochs):
         # Keeps track of the numbers of epochs
         # by updating the corresponding attribute
+        logger.info(f"Trainging {epoch}")
         total_epochs = epoch
         file_train_loss = []
         for file, file_id in TRAIN_FILES:
-            train_dataloader = get_dataloader(file, file_id, batch_size=batch)
+            train_dataloader = (
+                TEST_LOADER  # get_dataloader(file, file_id, batch_size=batch)
+            )
 
             # Performs training using mini-batches
             train_loss = mini_batch(
-                model, train_dataloader, optim, device, loss_func, validation=False
+                model, train_dataloader, optim, loss_func, device, validation=False
             )
             file_train_loss.append(train_loss)
             train_loss = np.mean(file_train_loss)
@@ -81,9 +88,9 @@ def mini_batch(model, dataloader, optim, loss_func, device, validation=False):
     # The argument `validation`defines which loader and
     # corresponding step function is going to be used
     if validation:
-        step_func = val_step_func()
+        step_func = val_step_func(model, loss_func)
     else:
-        step_func = train_step_func()
+        step_func = train_step_func(model, optim, loss_func)
 
     # Once the data loader and step function, this is the same
     # mini-batch loop we had before
@@ -91,14 +98,14 @@ def mini_batch(model, dataloader, optim, loss_func, device, validation=False):
     for x_batch, y_batch in dataloader:
         x_batch = x_batch.to(device)
         y_batch = y_batch.to(device)
-        loss = step_func(model, optim, loss_func, x=x_batch, y=y_batch)
+        loss = step_func(x=x_batch, y=y_batch)
         mini_batch_losses.append(loss)
     loss = np.mean(mini_batch_losses)
     return loss
 
 
-def train_step_func():
-    def perform_train_step_fn(model, optim, loss_func, x, y):
+def train_step_func(model, optim, loss_func):
+    def perform_train_step_fn(x, y):
         model.train()
         preds = model(x)
         loss = loss_func(preds, y)
@@ -110,13 +117,8 @@ def train_step_func():
     return perform_train_step_fn
 
 
-def val_step_func():
-    def perform_val_step_fn(
-        model,
-        loss_func,
-        x,
-        y,
-    ):
+def val_step_func(model, loss_func):
+    def perform_val_step_fn(x, y):
         model.eval()
         preds = model(x)
         loss = loss_func(preds, y)
@@ -165,7 +167,7 @@ def main(arg):
     model = model.to(DEVICE)
 
     # Optimizes given model/function using TorchDynamo and specified backend
-    torch.complie(model)
+    torch.compile(model)
     logger.info("training")
     wandb.init(
         project="ASL-project",

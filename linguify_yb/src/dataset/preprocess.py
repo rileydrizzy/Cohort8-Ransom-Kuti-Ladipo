@@ -74,11 +74,11 @@ def frames_preprocess(x):
     )
 
     x = torch.cat([hand, pose], dim=1)
-    print(f"befor  re{x.shape}")
+    #print(f"befor  re{x.shape}")
     x = resize_pad(x)
-    print(f"after re{x.shape}")
+    #print(f"after re{x.shape}")
     x = torch.where(torch.isnan(x), torch.zeros_like(x), x)
-    print(x.shape)
+    #print(x.shape)
 
     #! CRITICAL Debug
     # x = x.view(FRAME_LEN, len(LHAND_IDX) + len(LPOSE_IDX))
