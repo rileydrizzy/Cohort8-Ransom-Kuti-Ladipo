@@ -1,6 +1,7 @@
 """doc
 """
 import torch
+from torch.nn import functional as F
 
 from linguify_yb.src.dataset.frames_config import (FRAME_LEN, LHAND_IDX,
                                                    LPOSE_IDX, RHAND_IDX,
@@ -14,7 +15,7 @@ from linguify_yb.src.dataset.frames_config import (FRAME_LEN, LHAND_IDX,
 
 def resize_pad(x):
     if x.shape[0] < FRAME_LEN:
-        x = torch.nn.functional.pad(x, (0, 0, 0, FRAME_LEN - x.shape[0], 0, 0))
+        x = F.pad(x, (0, 0, 0, FRAME_LEN - x.shape[0], 0, 0))
     else:
         x = x.unsqueeze(0)  # Add batch and channel dimensions
         x = torch.nn.functional.interpolate(

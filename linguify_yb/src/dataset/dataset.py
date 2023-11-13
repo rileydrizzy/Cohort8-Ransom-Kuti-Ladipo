@@ -7,9 +7,11 @@ import numpy as np
 import pandas as pd
 import pyarrow.parquet as pq
 import torch
+from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
 
-from linguify_yb.src.dataset.frames_config import FEATURE_COLUMNS, LHAND_IDX, RHAND_IDX
+from linguify_yb.src.dataset.frames_config import (FEATURE_COLUMNS, LHAND_IDX,
+                                                   RHAND_IDX)
 from linguify_yb.src.dataset.preprocess import frames_preprocess
 
 PHRASE_PATH = "data/raw/character_to_prediction_index.json"
@@ -31,7 +33,7 @@ character_to_num[END_TOKEN] = END_TOKEN_IDX
 num_to_character = {j: i for i, j in character_to_num.items()}
 
 
-class StaticHashTable:
+class TokenHashTable:
     def __init__(self, word2index_mapping, index2word_mapping):
         self.word2index = word2index_mapping
         self.index2word = index2word_mapping
@@ -78,7 +80,7 @@ class LandmarkDataset(Dataset):
     def _label_pre(self, label_sample):
         sample = START_TOKEN + label_sample + END_TOKEN
         new_phrase = self.table.tensorFromSentence(list(sample))
-        ans = torch.nn.functional.pad(
+        ans = F.pad(
             input=new_phrase,
             pad=[0, 64 - new_phrase.shape[0]],
             mode="constant",
@@ -92,7 +94,7 @@ class LandmarkDataset(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
-        phrase = self.labels[idx][0] # TODO remove bug
+        phrase = self.labels[idx][0]  # TODO remove
         frames = self.frames[idx]
 
         if self.trans:
@@ -108,7 +110,7 @@ def pack_collate_func(batch):
 
 
 def get_dataloader(file_path, file_id, batch_size):
-    lookup_table = StaticHashTable(character_to_num, num_to_character)
+    lookup_table = TokenHashTable(character_to_num, num_to_character)
     dataset = LandmarkDataset(file_path, file_id, lookup_table, transform=True)
 
     dataloader = DataLoader(
@@ -118,27 +120,4 @@ def get_dataloader(file_path, file_id, batch_size):
         collate_fn=pack_collate_func,
         pin_memory=True,
     )
-    return dataloader
-
-
-# Test training pipeline
-class TestDataset(Dataset):
-    """test"""
-    def __init__(self, num_samples=1000, input_size=10):
-        self.num_samples = num_samples
-        self.input_size = input_size
-        self.data = torch.randn(num_samples, input_size)
-        self.labels = torch.randint(0, 2, (num_samples,))
-
-    def __len__(self):
-        return self.num_samples
-
-    def __getitem__(self, idx):
-        return self.data[idx], self.labels[idx]
-
-
-def get_test_dataloader():
-    # Generating a dataset with 1000 samples and 10 input features
-    dataset = TestDataset(num_samples=1000, input_size=10)
-    dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
     return dataloader
