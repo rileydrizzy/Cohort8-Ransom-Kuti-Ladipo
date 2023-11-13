@@ -7,12 +7,14 @@ import numpy as np
 import pandas as pd
 import pyarrow.parquet as pq
 import torch
+from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
 
-from linguify_yb.src.dataset.frames_config import FEATURE_COLUMNS, LHAND_IDX, RHAND_IDX
+from linguify_yb.src.dataset.frames_config import (FEATURE_COLUMNS, LHAND_IDX,
+                                                   RHAND_IDX)
 from linguify_yb.src.dataset.preprocess import frames_preprocess
 
-PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
+PHRASE_PATH = "data/raw/character_to_prediction_index.json"
 METADATA = "data/raw/train.csv"
 
 with open(PHRASE_PATH, "r", encoding="utf-8") as f:
@@ -31,7 +33,7 @@ character_to_num[END_TOKEN] = END_TOKEN_IDX
 num_to_character = {j: i for i, j in character_to_num.items()}
 
 
-class StaticHashTable:
+class TokenHashTable:
     def __init__(self, word2index_mapping, index2word_mapping):
         self.word2index = word2index_mapping
         self.index2word = index2word_mapping
@@ -66,8 +68,8 @@ def read_file(file, file_id, landmarks_metadata_path):
     return (frames_list, phrase_list)
 
 
-class CustomDataset(Dataset):
-    def __init__(self, file_path, file_id, table, transform=False):
+class LandmarkDataset(Dataset):
+    def __init__(self, file_path, file_id, table, transform=True):
         self.landmarks_metadata_path = METADATA
         self.frames, self.labels = read_file(
             file_path, file_id, self.landmarks_metadata_path
@@ -77,8 +79,8 @@ class CustomDataset(Dataset):
 
     def _label_pre(self, label_sample):
         sample = START_TOKEN + label_sample + END_TOKEN
-        new_phrase = self.table.tensorFromSentence(list(sample))
-        ans = torch.nn.functional.pad(
+        new_phrase = self.table.tensorfromsentence(list(sample))
+        ans = F.pad(
             input=new_phrase,
             pad=[0, 64 - new_phrase.shape[0]],
             mode="constant",
@@ -92,7 +94,7 @@ class CustomDataset(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
-        phrase = self.labels[idx]
+        phrase = self.labels[idx] 
         frames = self.frames[idx]
 
         if self.trans:
@@ -100,22 +102,41 @@ class CustomDataset(Dataset):
             frames = frames_preprocess(frames)
         return frames, phrase
 
-
 def pack_collate_func(batch):
     frames_feature = [item[0] for item in batch]
     phrase = [item[1] for item in batch]
-    return frames_feature, phrase
+    return [frames_feature, phrase]
 
 
 def get_dataloader(file_path, file_id, batch_size):
-    lookup_table = StaticHashTable(character_to_num, num_to_character)
-    dataset = CustomDataset(file_path, file_id, lookup_table, transform=True)
+    lookup_table = TokenHashTable(character_to_num, num_to_character)
+    dataset = LandmarkDataset(file_path, file_id, lookup_table, transform=True)
 
     dataloader = DataLoader(
         dataset,
-        batch=batch_size,
+        batch_size=batch_size,
         num_workers=2,
-        collate_fn=pack_collate_func,
         pin_memory=True,
     )
     return dataloader
+
+
+
+# For Debugging Train Pipeline
+
+class TestDataset(Dataset):
+    def __init__(self, num_samples=1000, input_size=10):
+        self.num_samples = num_samples
+        self.input_size = input_size
+        self.data = torch.randn(num_samples, input_size)
+        self.labels = torch.randint(0, 2, (num_samples,))
+
+    def __len__(self):
+        return self.num_samples
+
+    def __getitem__(self, idx):
+        return self.data[idx], self.labels[idx]
+
+# Generating a dataset with 1000 samples and 10 input features
+testdataset = TestDataset(num_samples=1000, input_size=10)
+TEST_LOADER = DataLoader(dataset=testdataset, batch_size=1, num_workers=2, pin_memory= True)

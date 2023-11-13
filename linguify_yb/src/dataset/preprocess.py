@@ -1,6 +1,7 @@
 """doc
 """
 import torch
+from torch.nn import functional as F
 
 from linguify_yb.src.dataset.frames_config import (FRAME_LEN, LHAND_IDX,
                                                    LPOSE_IDX, RHAND_IDX,
@@ -14,7 +15,7 @@ from linguify_yb.src.dataset.frames_config import (FRAME_LEN, LHAND_IDX,
 
 def resize_pad(x):
     if x.shape[0] < FRAME_LEN:
-        x = torch.nn.functional.pad(x, (0, 0, 0, FRAME_LEN - x.shape[0], 0, 0))
+        x = F.pad(x, (0, 0, 0, FRAME_LEN - x.shape[0], 0, 0))
     else:
         x = x.unsqueeze(0)  # Add batch and channel dimensions
         x = torch.nn.functional.interpolate(
@@ -73,11 +74,11 @@ def frames_preprocess(x):
     )
 
     x = torch.cat([hand, pose], dim=1)
-    print(f"befor  re{x.shape}")
+    #print(f"befor  re{x.shape}")
     x = resize_pad(x)
-    print(f"after re{x.shape}")
+    #print(f"after re{x.shape}")
     x = torch.where(torch.isnan(x), torch.zeros_like(x), x)
-    print(x.shape)
+    #print(x.shape)
 
     #! CRITICAL Debug
     # x = x.view(FRAME_LEN, len(LHAND_IDX) + len(LPOSE_IDX))

@@ -1,5 +1,7 @@
 import os
 import random
+import argparse
+
 import numpy as np
 import torch
 
@@ -24,3 +26,47 @@ def get_device_strategy(tpu=False):
     else:
         device = torch.device("cuda" if torch.cuda.is_availabe() else "cpu")
     return device
+
+
+def parse_args():
+    """
+    Parse arguments given to the script.
+
+    Returns:
+        The parsed argument object.
+    """
+    parser = argparse.ArgumentParser(
+        description="Run distributed data-parallel training and log with wandb."
+    )
+
+    parser.add_argument(
+        "--model",
+        default="asl_transfomer",
+        type=str,
+        metavar="N",
+        help="name of model to train",
+    )
+
+    parser.add_argument(
+        "--epochs",
+        default=2,
+        type=int,
+        metavar="N",
+        help="number of total epochs to run",
+    )
+    parser.add_argument(
+        "--batch",
+        default=32,
+        type=int,
+        metavar="N",
+        help="number of data samples in one batch",
+    )
+    parser.add_argument(
+        "--tpu",
+        default=False,
+        type=bool,
+        metavar="N",
+        help="Train on TPU Device",
+    )
+    args = parser.parse_args()
+    return args

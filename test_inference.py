@@ -1,14 +1,13 @@
 """doc
 """
 import os
-
 import cv2
 import mediapipe as mp
 import torch
 from IPython.display import Audio
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, VitsModel
 
-from linguify_yb.src.models import asl_transfomer
+from linguify_yb.src.models import baseline_transfomer
 
 nllb_model_name = "facebook/nllb-200-distilled-600M"
 mms_model_name = "facebook/mms-tts-yor"
@@ -40,3 +39,52 @@ def MMS_model_infer(text):
     with torch.no_grad():
         output = mms_model(**inputs).waveform
     return Audio(output, rate=mms_model.config.sampling_rate)
+
+# TODO Debug
+def extract_pose_frames(video_file):
+    # Initialize Mediapipe holistic model
+    mp_holistic = mp.solutions.holistic
+    holistic = mp_holistic.Holistic()
+
+    # Open a video file
+    video_path = video_file
+    cap = cv2.VideoCapture(video_path)
+
+    # Loop through frames
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        # Convert the BGR image to RGB
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        # Process the frame with Mediapipe
+        results = holistic.process(rgb_frame)
+
+        # Draw landmarks on the frame
+        if results.pose_landmarks:
+            mp.solutions.drawing_utils.draw_landmarks(
+                frame, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS
+            )
+            # mp.solutions.drawing_utils.draw_landmarks(
+            #   frame, results.face_landmarks, mp_holistic.FACE_CONNECTIONS)
+            mp.solutions.drawing_utils.draw_landmarks(
+                frame, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS
+            )
+            mp.solutions.drawing_utils.draw_landmarks(
+                frame, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS
+            )
+        # TODO BUG!
+        # Display the frame
+        cv2.imshow("Holistic Landmarks", frame)
+
+        # Break the loop if 'q' key is pressed
+        if cv2.waitKey(10) & 0xFF == ord("q"):
+            break
+
+    # Release the video capture object
+    cap.release()
+
+    # Close all OpenCV windows
+    cv2.destroyAllWindows()
