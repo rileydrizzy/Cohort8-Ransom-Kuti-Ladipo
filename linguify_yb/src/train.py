@@ -14,7 +14,7 @@ import os
 import numpy as np
 import torch
 import wandb
-from torch import nn, optim
+from torch import nn
 
 from linguify_yb.src.dataset.dataset import get_dataloader, TEST_LOADER
 from linguify_yb.src.models.model_loader import ModelLoader
@@ -83,14 +83,16 @@ def train(model, optim, loss_func, n_epochs, batch, device):
             )
 
 
-def mini_batch(model, dataloader, optim, loss_func, device, validation=False):
+def mini_batch(
+    model, dataloader, mini_batch_optim, loss_func, device, validation=False
+):
     # The mini-batch can be used with both loaders
     # The argument `validation`defines which loader and
     # corresponding step function is going to be used
     if validation:
         step_func = val_step_func(model, loss_func)
     else:
-        step_func = train_step_func(model, optim, loss_func)
+        step_func = train_step_func(model, mini_batch_optim, loss_func)
 
     # Once the data loader and step function, this is the same
     # mini-batch loop we had before
@@ -104,14 +106,14 @@ def mini_batch(model, dataloader, optim, loss_func, device, validation=False):
     return loss
 
 
-def train_step_func(model, optim, loss_func):
+def train_step_func(model, optim_, loss_func):
     def perform_train_step_fn(x, y):
         model.train()
         preds = model(x)
         loss = loss_func(preds, y)
         loss.backward()
-        optim.step()
-        optim.zero_grad()
+        optim_.step()
+        optim_.zero_grad()
         return loss.item()
 
     return perform_train_step_fn
@@ -162,8 +164,8 @@ def main(arg):
 
     model = ModelLoader().get_model(arg.model)
 
-    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
-    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
     model = model.to(DEVICE)
 
     # Optimizes given model/function using TorchDynamo and specified backend
