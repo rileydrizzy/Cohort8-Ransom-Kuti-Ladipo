@@ -16,13 +16,13 @@ import torch
 import wandb
 from torch import nn, optim
 
-from linguify_yb.src.dataset.dataset import get_dataloader,TEST_LOADER
+from linguify_yb.src.dataset.dataset import get_dataloader, TEST_LOADER
 from linguify_yb.src.models.model_loader import ModelLoader
 from linguify_yb.src.utils import get_device_strategy, parse_args, set_seed
 from linguify_yb.src.utils.logger_util import logger
 
 try:
-    LANDMARK_DIR = "/kaggle/input/asl-fingerspelling/train_landmarks"
+    LANDMARK_DIR = "/data/raw/asl-fingerspelling/train_landmarks"
     MODEL_DIR = "/kaggle/working/model_dir"
     parquet_files = glob.glob(f"{LANDMARK_DIR}/*.parquet")
     file_ids = [os.path.basename(file) for file in parquet_files]
@@ -44,9 +44,7 @@ def train(model, optim, loss_func, n_epochs, batch, device):
     val_dataloader = TEST_LOADER  # get_dataloader(TRAIN_FILES[0][0], TRAIN_FILES[0][1], batch_size=batch)
 
     for epoch in range(n_epochs):
-        # Keeps track of the numbers of epochs
-        # by updating the corresponding attribute
-        logger.info(f"Trainging {epoch}")
+        logger.info(f"Training on epoch {epoch}.")
         total_epochs = epoch
         file_train_loss = []
         for file, file_id in TRAIN_FILES:
@@ -59,10 +57,11 @@ def train(model, optim, loss_func, n_epochs, batch, device):
                 model, train_dataloader, optim, loss_func, device, validation=False
             )
             file_train_loss.append(train_loss)
-            train_loss = np.mean(file_train_loss)
-            train_losses.append(train_loss)
+        train_loss = np.mean(file_train_loss)
+        train_losses.append(train_loss)
 
         # Performs evaluation using mini-batches
+        logger.info("Starting validation.")
         with torch.no_grad():
             val_loss = mini_batch(
                 model, val_dataloader, optim, loss_func, device, validation=True
@@ -76,8 +75,9 @@ def train(model, optim, loss_func, n_epochs, batch, device):
                 "epoch": epoch,
             }
         )
-        # Checkpoint model
+
         if epoch // 2 == 0:
+            logger.info("Initiating checkpoint. Saving model and optimizer states.")
             save_checkpoint(
                 MODEL_DIR, model, optim, total_epochs, train_losses, val_losses
             )
@@ -155,10 +155,10 @@ def load_checkpoint(model, optimizer, filename):
 
 
 def main(arg):
-    logger.info("Starting training")
+    logger.info(f"Starting training on {arg.model}")
 
     DEVICE = get_device_strategy(tpu=arg.tpu)
-    logger.info(f"Trainig on {DEVICE}")
+    logger.info(f"Training on {DEVICE} for {arg.epochs} epochs.")
 
     model = ModelLoader().get_model(arg.model)
 
@@ -168,6 +168,7 @@ def main(arg):
 
     # Optimizes given model/function using TorchDynamo and specified backend
     torch.compile(model)
+
     logger.info("training")
     wandb.init(
         project="ASL-project",
@@ -178,6 +179,7 @@ def main(arg):
             "epochs": 12,
         },
     )
+
     wandb.watch(model)
     try:
         train(
@@ -188,9 +190,10 @@ def main(arg):
             batch=arg.batch,
             device=DEVICE,
         )
-        logger.info("finished")
+        logger.success(f"Training completed: {arg.epochs} epochs on {DEVICE}.")
+
     except Exception as error:
-        logger.exception(f"Trainig failed{error}")
+        logger.exception(f"Training failed due to an {error}.")
 
 
 if __name__ == "__main__":
