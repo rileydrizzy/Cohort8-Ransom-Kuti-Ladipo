@@ -95,6 +95,7 @@ data/*/*
 models/*
 !.gitkeep
 !dataset_paths.json
+!dev_samples.json
 
 # linguify_yb directory
 linguify_yb/data/*/*
@@ -112,7 +113,7 @@ yb2audio/data/*/*
 #yb2audio/development
 
 # Development Enviroment
-#dev
+dev.py
 #development
 dev_env.txt
 
