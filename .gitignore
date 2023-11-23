@@ -112,7 +112,7 @@ yb2audio/data/*/*
 #yb2audio/development
 
 # Development Enviroment
-#dev
+dev.py
 #development
 dev_env.txt
 
