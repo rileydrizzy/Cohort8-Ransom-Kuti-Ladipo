@@ -23,13 +23,14 @@ from linguify_yb.src.utils.logger_util import logger
 
 
 try:
-    file_path = "dataset_paths.json"
-    with open(file_path, "r", encoding='utf-8') as json_file:
+    dataset_paths = "dev_samples.json"  # On kaggle replace with "dataset_paths.json" to train on full data
+    with open(dataset_paths, "r", encoding="utf-8") as json_file:
         data_dict = json.load(json_file)
     LANDMARK_DIR = "/kaggle/input/asl-fingerspelling/train_landmarks"
-    train_dataset = data_dict["train_files"]
-    valid_dataset = data_dict["valid_files"]
+    MODEL_DIR = "model.pt"
 
+    # Training dataset
+    train_dataset = data_dict["train_files"]
     train_file_ids = [os.path.basename(file) for file in train_dataset]
     train_file_ids = [
         int(file_name.replace(".parquet", "")) for file_name in train_file_ids
@@ -40,6 +41,7 @@ try:
     TRAIN_DS_FILES = list(zip(train_dataset, train_file_ids))
 
     # Validation dataset
+    valid_dataset = data_dict["valid_files"]
     valid_file_ids = [os.path.basename(file) for file in valid_dataset]
     valid_file_ids = [
         int(file_name.replace(".parquet", "")) for file_name in valid_file_ids
@@ -49,7 +51,7 @@ try:
     ), "Failed Import of Valid Files path"
     VALID_DS_FILES = list(zip(valid_dataset, valid_file_ids))
 except AssertionError as asset_error:
-    logger.exception(f"fail {asset_error}")
+    logger.exception(f"failed {asset_error}")
 
 
 def train(model, optim, loss_func, n_epochs, batch, device):
