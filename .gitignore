@@ -95,6 +95,7 @@ data/*/*
 models/*
 !.gitkeep
 !dataset_paths.json
+!dev_samples.json
 
 # linguify_yb directory
 linguify_yb/data/*/*
