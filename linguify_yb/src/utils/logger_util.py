@@ -10,7 +10,7 @@ Usage:
   - `logger.warning("Warning message")`
   - `logger.error("Error message")`
   - `logger.critical("Critical message")`
-  - `logger.succues("success messgae")`
+  - `logger.success("success messgae")`
 """
 
 from pathlib import Path

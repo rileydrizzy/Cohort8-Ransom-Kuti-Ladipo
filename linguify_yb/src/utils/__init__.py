@@ -5,7 +5,7 @@ import argparse
 import numpy as np
 import torch
 
-# import torch_xla.core.xla_model as xm
+import torch_xla.core.xla_model as xm
 
 
 def set_seed(seed: int = 42) -> None:
@@ -68,5 +68,7 @@ def parse_args():
         metavar="N",
         help="Train on TPU Device",
     )
+    parser.add_argument('--resume_checkpoint', type=bool, help='Path to the checkpoint for resuming training')
+
     args = parser.parse_args()
     return args

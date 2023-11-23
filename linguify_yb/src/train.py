@@ -8,32 +8,50 @@ doc
 """
 # TODO Complete and refactor code
 
-import glob
 import os
+import json
 
 import numpy as np
 import torch
 import wandb
-from torch import nn, optim
+from torch import nn
 
-from linguify_yb.src.dataset.dataset import get_dataloader,TEST_LOADER
+from linguify_yb.src.dataset.dataset import get_dataloader, TEST_LOADER
 from linguify_yb.src.models.model_loader import ModelLoader
 from linguify_yb.src.utils import get_device_strategy, parse_args, set_seed
 from linguify_yb.src.utils.logger_util import logger
 
-try:
-    LANDMARK_DIR = "/kaggle/input/asl-fingerspelling/train_landmarks"
-    MODEL_DIR = "/kaggle/working/model_dir"
-    parquet_files = glob.glob(f"{LANDMARK_DIR}/*.parquet")
-    file_ids = [os.path.basename(file) for file in parquet_files]
-    file_ids = [int(file_name.replace(".parquet", "")) for file_name in file_ids]
-    assert len(parquet_files) == len(file_ids), "Failed Import of Files"
-    TRAIN_FILES = list(zip(parquet_files, file_ids))
-except AssertionError as asset_error:
-    logger.info(f"fail {asset_error}")
 
-# TODO For Debugging
-TRAIN_FILES = TRAIN_FILES[:2]
+try:
+    dataset_paths = "dev_samples.json"  # On kaggle replace with "dataset_paths.json" to train on full data
+    with open(dataset_paths, "r", encoding="utf-8") as json_file:
+        data_dict = json.load(json_file)
+    LANDMARK_DIR = "/kaggle/input/asl-fingerspelling/train_landmarks"
+    MODEL_DIR = "model.pt"
+
+    # Training dataset
+    train_dataset = data_dict["train_files"]
+    train_file_ids = [os.path.basename(file) for file in train_dataset]
+    train_file_ids = [
+        int(file_name.replace(".parquet", "")) for file_name in train_file_ids
+    ]
+    assert len(train_dataset) == len(
+        train_file_ids
+    ), "Failed import of Train files path "
+    TRAIN_DS_FILES = list(zip(train_dataset, train_file_ids))
+
+    # Validation dataset
+    valid_dataset = data_dict["valid_files"]
+    valid_file_ids = [os.path.basename(file) for file in valid_dataset]
+    valid_file_ids = [
+        int(file_name.replace(".parquet", "")) for file_name in valid_file_ids
+    ]
+    assert len(train_dataset) == len(
+        train_file_ids
+    ), "Failed Import of Valid Files path"
+    VALID_DS_FILES = list(zip(valid_dataset, valid_file_ids))
+except AssertionError as asset_error:
+    logger.exception(f"failed {asset_error}")
 
 
 def train(model, optim, loss_func, n_epochs, batch, device):
@@ -44,12 +62,10 @@ def train(model, optim, loss_func, n_epochs, batch, device):
     val_dataloader = TEST_LOADER  # get_dataloader(TRAIN_FILES[0][0], TRAIN_FILES[0][1], batch_size=batch)
 
     for epoch in range(n_epochs):
-        # Keeps track of the numbers of epochs
-        # by updating the corresponding attribute
-        logger.info(f"Trainging {epoch}")
+        logger.info(f"Training on epoch {epoch}.")
         total_epochs = epoch
         file_train_loss = []
-        for file, file_id in TRAIN_FILES:
+        for file, file_id in TRAIN_DS_FILES:
             train_dataloader = (
                 TEST_LOADER  # get_dataloader(file, file_id, batch_size=batch)
             )
@@ -59,10 +75,11 @@ def train(model, optim, loss_func, n_epochs, batch, device):
                 model, train_dataloader, optim, loss_func, device, validation=False
             )
             file_train_loss.append(train_loss)
-            train_loss = np.mean(file_train_loss)
-            train_losses.append(train_loss)
+        train_loss = np.mean(file_train_loss)
+        train_losses.append(train_loss)
 
         # Performs evaluation using mini-batches
+        logger.info("Starting validation.")
         with torch.no_grad():
             val_loss = mini_batch(
                 model, val_dataloader, optim, loss_func, device, validation=True
@@ -76,21 +93,24 @@ def train(model, optim, loss_func, n_epochs, batch, device):
                 "epoch": epoch,
             }
         )
-        # Checkpoint model
+
         if epoch // 2 == 0:
+            logger.info("Initiating checkpoint. Saving model and optimizer states.")
             save_checkpoint(
                 MODEL_DIR, model, optim, total_epochs, train_losses, val_losses
             )
 
 
-def mini_batch(model, dataloader, optim, loss_func, device, validation=False):
+def mini_batch(
+    model, dataloader, mini_batch_optim, loss_func, device, validation=False
+):
     # The mini-batch can be used with both loaders
     # The argument `validation`defines which loader and
     # corresponding step function is going to be used
     if validation:
         step_func = val_step_func(model, loss_func)
     else:
-        step_func = train_step_func(model, optim, loss_func)
+        step_func = train_step_func(model, mini_batch_optim, loss_func)
 
     # Once the data loader and step function, this is the same
     # mini-batch loop we had before
@@ -104,14 +124,14 @@ def mini_batch(model, dataloader, optim, loss_func, device, validation=False):
     return loss
 
 
-def train_step_func(model, optim, loss_func):
+def train_step_func(model, optim_, loss_func):
     def perform_train_step_fn(x, y):
         model.train()
         preds = model(x)
         loss = loss_func(preds, y)
         loss.backward()
-        optim.step()
-        optim.zero_grad()
+        optim_.step()
+        optim_.zero_grad()
         return loss.item()
 
     return perform_train_step_fn
@@ -155,19 +175,20 @@ def load_checkpoint(model, optimizer, filename):
 
 
 def main(arg):
-    logger.info("Starting training")
+    logger.info(f"Starting training on {arg.model}")
 
     DEVICE = get_device_strategy(tpu=arg.tpu)
-    logger.info(f"Trainig on {DEVICE}")
+    logger.info(f"Training on {DEVICE} for {arg.epochs} epochs.")
 
     model = ModelLoader().get_model(arg.model)
 
-    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
-    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
     model = model.to(DEVICE)
 
     # Optimizes given model/function using TorchDynamo and specified backend
     torch.compile(model)
+
     logger.info("training")
     wandb.init(
         project="ASL-project",
@@ -178,6 +199,7 @@ def main(arg):
             "epochs": 12,
         },
     )
+
     wandb.watch(model)
     try:
         train(
@@ -188,9 +210,10 @@ def main(arg):
             batch=arg.batch,
             device=DEVICE,
         )
-        logger.info("finished")
+        logger.success(f"Training completed: {arg.epochs} epochs on {DEVICE}.")
+
     except Exception as error:
-        logger.exception(f"Trainig failed{error}")
+        logger.exception(f"Training failed due to an {error}.")
 
 
 if __name__ == "__main__":
