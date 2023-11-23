@@ -94,6 +94,7 @@ target/
 data/*/*
 models/*
 !.gitkeep
+!dataset_paths.json
 
 # linguify_yb directory
 linguify_yb/data/*/*

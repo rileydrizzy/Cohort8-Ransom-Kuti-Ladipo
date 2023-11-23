@@ -8,8 +8,8 @@ doc
 """
 # TODO Complete and refactor code
 
-import glob
 import os
+import json
 
 import numpy as np
 import torch
@@ -21,19 +21,35 @@ from linguify_yb.src.models.model_loader import ModelLoader
 from linguify_yb.src.utils import get_device_strategy, parse_args, set_seed
 from linguify_yb.src.utils.logger_util import logger
 
-try:
-    LANDMARK_DIR = "/data/raw/asl-fingerspelling/train_landmarks"
-    MODEL_DIR = "/kaggle/working/model_dir"
-    parquet_files = glob.glob(f"{LANDMARK_DIR}/*.parquet")
-    file_ids = [os.path.basename(file) for file in parquet_files]
-    file_ids = [int(file_name.replace(".parquet", "")) for file_name in file_ids]
-    assert len(parquet_files) == len(file_ids), "Failed Import of Files"
-    TRAIN_FILES = list(zip(parquet_files, file_ids))
-except AssertionError as asset_error:
-    logger.info(f"fail {asset_error}")
 
-# TODO For Debugging
-TRAIN_FILES = TRAIN_FILES[:2]
+try:
+    file_path = "dataset_paths.json"
+    with open(file_path, "r", encoding='utf-8') as json_file:
+        data_dict = json.load(json_file)
+    LANDMARK_DIR = "/kaggle/input/asl-fingerspelling/train_landmarks"
+    train_dataset = data_dict["train_files"]
+    valid_dataset = data_dict["valid_files"]
+
+    train_file_ids = [os.path.basename(file) for file in train_dataset]
+    train_file_ids = [
+        int(file_name.replace(".parquet", "")) for file_name in train_file_ids
+    ]
+    assert len(train_dataset) == len(
+        train_file_ids
+    ), "Failed import of Train files path "
+    TRAIN_DS_FILES = list(zip(train_dataset, train_file_ids))
+
+    # Validation dataset
+    valid_file_ids = [os.path.basename(file) for file in valid_dataset]
+    valid_file_ids = [
+        int(file_name.replace(".parquet", "")) for file_name in valid_file_ids
+    ]
+    assert len(train_dataset) == len(
+        train_file_ids
+    ), "Failed Import of Valid Files path"
+    VALID_DS_FILES = list(zip(valid_dataset, valid_file_ids))
+except AssertionError as asset_error:
+    logger.exception(f"fail {asset_error}")
 
 
 def train(model, optim, loss_func, n_epochs, batch, device):
@@ -47,7 +63,7 @@ def train(model, optim, loss_func, n_epochs, batch, device):
         logger.info(f"Training on epoch {epoch}.")
         total_epochs = epoch
         file_train_loss = []
-        for file, file_id in TRAIN_FILES:
+        for file, file_id in TRAIN_DS_FILES:
             train_dataloader = (
                 TEST_LOADER  # get_dataloader(file, file_id, batch_size=batch)
             )
