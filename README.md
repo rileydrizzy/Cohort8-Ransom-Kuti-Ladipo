@@ -52,7 +52,7 @@ $ make setup
 $ source $(poetry env info --path)/bin/activate
 ```
 
-## Planned Task
+## Project Roadmap
 
 Here's a glimpse of the exciting features we plan to implement in the coming weeks:
 
