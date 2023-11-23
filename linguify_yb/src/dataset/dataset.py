@@ -14,8 +14,8 @@ from linguify_yb.src.dataset.frames_config import (FEATURE_COLUMNS, LHAND_IDX,
                                                    RHAND_IDX)
 from linguify_yb.src.dataset.preprocess import frames_preprocess
 
-PHRASE_PATH = "data/asl-fingerspelling/character_to_prediction_index.json"
-METADATA = "data/asl-fingerspelling/train.csv"
+PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
+METADATA = "data/raw/train.csv"
 
 with open(PHRASE_PATH, "r", encoding="utf-8") as f:
     character_to_num = json.load(f)

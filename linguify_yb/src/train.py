@@ -1,5 +1,11 @@
 """
+
 doc
+
+# Usage:
+# python -m src/train.py \
+# --epochs 10 \
+# --batch 512 \
 
 # Usage:
 # python -m src/train.py \
@@ -17,6 +23,9 @@ import wandb
 from torch import nn
 
 from linguify_yb.src.dataset.dataset import get_dataloader, TEST_LOADER
+from torch import nn, optim
+
+from linguify_yb.src.dataset.dataset import get_dataloader,TEST_LOADER
 from linguify_yb.src.models.model_loader import ModelLoader
 from linguify_yb.src.utils import get_device_strategy, parse_args, set_seed
 from linguify_yb.src.utils.logger_util import logger
@@ -52,6 +61,19 @@ try:
     VALID_DS_FILES = list(zip(valid_dataset, valid_file_ids))
 except AssertionError as asset_error:
     logger.exception(f"failed {asset_error}")
+try:
+    LANDMARK_DIR = "/kaggle/input/asl-fingerspelling/train_landmarks"
+    MODEL_DIR = "/kaggle/working/model_dir"
+    parquet_files = glob.glob(f"{LANDMARK_DIR}/*.parquet")
+    file_ids = [os.path.basename(file) for file in parquet_files]
+    file_ids = [int(file_name.replace(".parquet", "")) for file_name in file_ids]
+    assert len(parquet_files) == len(file_ids), "Failed Import of Files"
+    TRAIN_FILES = list(zip(parquet_files, file_ids))
+except AssertionError as asset_error:
+    logger.info(f"fail {asset_error}")
+
+# TODO For Debugging
+TRAIN_FILES = TRAIN_FILES[:2]
 
 
 def train(model, optim, loss_func, n_epochs, batch, device):
@@ -66,6 +88,12 @@ def train(model, optim, loss_func, n_epochs, batch, device):
         total_epochs = epoch
         file_train_loss = []
         for file, file_id in TRAIN_DS_FILES:
+        # Keeps track of the numbers of epochs
+        # by updating the corresponding attribute
+        logger.info(f"Trainging {epoch}")
+        total_epochs = epoch
+        file_train_loss = []
+        for file, file_id in TRAIN_FILES:
             train_dataloader = (
                 TEST_LOADER  # get_dataloader(file, file_id, batch_size=batch)
             )
@@ -80,6 +108,10 @@ def train(model, optim, loss_func, n_epochs, batch, device):
 
         # Performs evaluation using mini-batches
         logger.info("Starting validation.")
+            train_loss = np.mean(file_train_loss)
+            train_losses.append(train_loss)
+
+        # Performs evaluation using mini-batches
         with torch.no_grad():
             val_loss = mini_batch(
                 model, val_dataloader, optim, loss_func, device, validation=True
@@ -96,6 +128,8 @@ def train(model, optim, loss_func, n_epochs, batch, device):
 
         if epoch // 2 == 0:
             logger.info("Initiating checkpoint. Saving model and optimizer states.")
+        # Checkpoint model
+        if epoch // 2 == 0:
             save_checkpoint(
                 MODEL_DIR, model, optim, total_epochs, train_losses, val_losses
             )
@@ -111,6 +145,7 @@ def mini_batch(
         step_func = val_step_func(model, loss_func)
     else:
         step_func = train_step_func(model, mini_batch_optim, loss_func)
+        step_func = train_step_func(model, optim, loss_func)
 
     # Once the data loader and step function, this is the same
     # mini-batch loop we had before
@@ -125,6 +160,7 @@ def mini_batch(
 
 
 def train_step_func(model, optim_, loss_func):
+def train_step_func(model, optim, loss_func):
     def perform_train_step_fn(x, y):
         model.train()
         preds = model(x)
@@ -184,6 +220,15 @@ def main(arg):
 
     optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
     criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
+    logger.info("Starting training")
+
+    DEVICE = get_device_strategy(tpu=arg.tpu)
+    logger.info(f"Trainig on {DEVICE}")
+
+    model = ModelLoader().get_model(arg.model)
+
+    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    criterion = nn.CrossEntropyLoss()
     model = model.to(DEVICE)
 
     # Optimizes given model/function using TorchDynamo and specified backend
@@ -199,6 +244,19 @@ def main(arg):
             "epochs": 12,
         },
     )
+    wandb.watch(model)
+    try:
+        train(
+            model=arg.model,
+            optim=optimizer,
+            loss_func=criterion,
+            n_epochs=arg.epochs,
+            batch=arg.batch,
+            device=DEVICE,
+        )
+        logger.info("finished")
+    except Exception as error:
+        logger.exception(f"Trainig failed{error}")
 
     wandb.watch(model)
     try:
