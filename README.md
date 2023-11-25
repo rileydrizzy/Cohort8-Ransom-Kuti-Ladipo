@@ -1,4 +1,4 @@
-# NSL2AUDIOO
+# NSL-2-AUDIO
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10-blue.svg?style=flat-square)](https://www.python.org/)
@@ -52,13 +52,13 @@ $ make setup
 $ source $(poetry env info --path)/bin/activate
 ```
 
-## Project Roadmap
+### Project Roadmap
 
 Here's a glimpse of the exciting features we plan to implement in the coming weeks:
 
-
-
-## Citation
+- [x] Add project's documentation (you are reading it now), create issues and milestones, setup document's stub, suggest
+  page layout and styling.
+- [] Develop a Proof of Concept System
 
 ## Acknowledgments
 
