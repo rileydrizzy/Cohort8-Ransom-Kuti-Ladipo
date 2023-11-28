@@ -175,5 +175,6 @@ class Transformer(nn.Module):
             dec_input = torch.cat([dec_input, last_logit], dim=-1)
         return dec_input
 
+
 def build_model():
     pass
