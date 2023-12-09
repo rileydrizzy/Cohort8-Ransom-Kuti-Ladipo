@@ -10,8 +10,7 @@ import torch
 from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
 
-from linguify_yb.src.dataset.frames_config import (FEATURE_COLUMNS, LHAND_IDX,
-                                                   RHAND_IDX)
+from linguify_yb.src.dataset.frames_config import FEATURE_COLUMNS, LHAND_IDX, RHAND_IDX
 from linguify_yb.src.dataset.preprocess import frames_preprocess
 
 PHRASE_PATH = "data/asl-fingerspelling/character_to_prediction_index.json"
@@ -94,13 +93,14 @@ class LandmarkDataset(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
-        phrase = self.labels[idx] 
+        phrase = self.labels[idx]
         frames = self.frames[idx]
 
         if self.trans:
             phrase = self._label_pre(phrase)
             frames = frames_preprocess(frames)
         return frames, phrase
+
 
 def pack_collate_func(batch):
     frames_feature = [item[0] for item in batch]
@@ -121,8 +121,8 @@ def get_dataloader(file_path, file_id, batch_size):
     return dataloader
 
 
-
 # For Debugging Train Pipeline
+
 
 class TestDataset(Dataset):
     def __init__(self, num_samples=1000, input_size=10):
@@ -137,6 +137,9 @@ class TestDataset(Dataset):
     def __getitem__(self, idx):
         return self.data[idx], self.labels[idx]
 
+
 # Generating a dataset with 1000 samples and 10 input features
 testdataset = TestDataset(num_samples=1000, input_size=10)
-TEST_LOADER = DataLoader(dataset=testdataset, batch_size=1, num_workers=2, pin_memory= True)
+TEST_LOADER = DataLoader(
+    dataset=testdataset, batch_size=1, num_workers=2, pin_memory=True
+)

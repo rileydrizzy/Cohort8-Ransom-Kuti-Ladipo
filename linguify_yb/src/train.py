@@ -6,7 +6,7 @@ doc
 # --epochs 10 \
 # --batch 512 \
 """
-# TODO Complete and refactor code
+# TODO Complete and refactor code for distributed training
 
 import os
 import json
