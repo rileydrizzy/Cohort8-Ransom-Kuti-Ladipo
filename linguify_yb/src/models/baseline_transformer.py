@@ -3,11 +3,10 @@
 
 import torch
 from torch import nn
-import torch.nn.functional as F
 
 
 class TokenEmbedding(nn.Module):
-    def __init__(self, num_vocab=1000, maxlen=100, num_hid=64):
+    def __init__(self, num_vocab=1000, maxlen=100, num_hid=200):
         super().__init__()
         self.emb = nn.Embedding(num_vocab, num_hid)
         self.pos_emb = nn.Embedding(maxlen, num_hid)
@@ -24,41 +23,33 @@ class LandmarkEmbedding(nn.Module):
     def __init__(self, num_hid=64, maxlen=100):
         super().__init__()
         # Calculate the padding for "same" padding
-        self.padding = (11 - 1) // 2
-        self.output_embedding_dim = num_hid
+        padding = (11 - 1) // 2
+
+        # Define three 1D convolutional layers with ReLU activation and stride 2
         self.conv1 = nn.Conv1d(
-            in_channels=1,
-            out_channels=64,
-            kernel_size=11,
-            stride=1,
-            padding=self.padding,
+            in_channels=1, out_channels=64, kernel_size=11, stride=2, padding=padding
         )
         self.conv2 = nn.Conv1d(
-            in_channels=64,
-            out_channels=128,
-            kernel_size=11,
-            stride=1,
-            padding=self.padding,
+            in_channels=64, out_channels=128, kernel_size=11, stride=2, padding=padding
         )
         self.conv3 = nn.Conv1d(
-            in_channels=128,
-            out_channels=256,
-            kernel_size=11,
-            stride=1,
-            padding=self.padding,
+            in_channels=128, out_channels=256, kernel_size=11, stride=2, padding=padding
         )
-        self.pos_emb = nn.Embedding(maxlen, num_hid)
-        self.embedding_layer = nn.Linear(256 * 345, self.output_embedding_dim)
+
+        # Output embedding layer
+        self.embedding_layer = nn.Linear(256, num_hid)
 
     def forward(self, x):
         # Input x should have shape (batch_size, input_size)
         x = x.unsqueeze(1)  # Add a channel dimension for 1D convolution
-        x = F.relu(self.conv1(x))
-        x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
 
-        # Flatten the output before passing through the linear embedding layer
-        x = x.view(x.size(0), -1)
+        # Apply convolutional layers with ReLU activation and stride 2
+        x = torch.relu(self.conv1(x))
+        x = torch.relu(self.conv2(x))
+        x = torch.relu(self.conv3(x))
+
+        # Global average pooling to reduce spatial dimensions
+        x = torch.mean(x, dim=2)
 
         # Apply the linear embedding layer
         x = self.embedding_layer(x)
@@ -94,7 +85,9 @@ class TransformerEncoder(nn.Module):
 
         ffn_out = self.ffn(out1)
         ffn_out = self.dropout2(ffn_out)
-        return self.layernorm2(out1 + ffn_out)
+        x = self.layernorm2(out1 + ffn_out)
+        print(f"endocder{x.shape}")
+        return x
 
 
 class TransformerDecoder(nn.Module):
@@ -115,7 +108,7 @@ class TransformerDecoder(nn.Module):
         )
 
     def causal_attention_mask(
-        self, sequence_length, batch_size=1, num_heads=8, device="cpu"
+        self, sequence_length, batch_size=1, num_heads=4, device="cpu"
     ):
         mask = torch.triu(torch.ones(sequence_length, sequence_length), diagonal=1).to(
             device
@@ -127,8 +120,8 @@ class TransformerDecoder(nn.Module):
 
     def forward(
         self,
-        src_target_,
         enc_out,
+        src_target_,
     ):
         input_shape = src_target_.size()
         batch_size = 1  # input_shape[0]
@@ -144,7 +137,7 @@ class TransformerDecoder(nn.Module):
 
         ffn_out = self.ffn(enc_out_norm)
         ffn_out_norm = self.layernorm3(enc_out_norm + self.ffn_dropout(ffn_out))
-
+        print(f"decoder - {ffn_out_norm.shape}")
         return ffn_out_norm
 
 
@@ -157,17 +150,17 @@ class NTransformer(nn.Module):
         source_maxlen=100,
         target_maxlen=100,
         num_layers_enc=4,
-        num_layers_dec=1,
+        num_layers_dec=4,
     ):
         super().__init__()
         self.num_layers_enc = num_layers_enc
         self.num_layers_dec = num_layers_dec
         self.target_maxlen = target_maxlen
-        self.num_classes = 64
+        self.num_classes = 62
 
         self.enc_input = LandmarkEmbedding(num_hid=num_hid, maxlen=source_maxlen)
         self.dec_input = TokenEmbedding(
-            num_vocab=64,
+            num_vocab=self.num_classes, maxlen=target_maxlen
         )
 
         self.encoder = nn.Sequential(
@@ -186,19 +179,19 @@ class NTransformer(nn.Module):
 
         self.classifier = nn.Linear(num_hid, self.num_classes)
 
-    def forward(self, inputs):
-        source, target = inputs
+    def forward(self, source, target):
         x = self.encoder(source)
-        y = self.decode(x, target)
+        y = self.decoder_run(x, target)
+        print(y.shape)
         return self.classifier(y)
 
-    def decode(self, enc_out, target):
+    def decoder_run(self, enc_out, target):
+        print(f"before emb {target.shape}")
         y = self.dec_input(target)
+        print(f"after emb {y.shape}")
+
         for i in range(self.num_layers_dec):
-            y = getattr(self, f"dec_layer_{i}")(
-                enc_out,
-                y,
-            )
+            y = getattr(self, f"dec_layer_{i}")(enc_out, y)
         return y
 
     def generate(self, source, target_start_token_idx=60):
@@ -222,15 +215,12 @@ class NTransformer(nn.Module):
             torch.ones((1), dtype=torch.long).to(source.device) * target_start_token_idx
         )
         dec_logits = []
-        counter = 0
         for i in range(self.target_maxlen - 1):
-            dec_out = self.decode(enc, dec_input)
+            dec_out = self.decoder_run(enc, dec_input)
             logits = self.classifier(dec_out)
+
             logits = torch.argmax(logits, dim=-1, keepdim=True)
-            last_logit = logits[:, -1]
+            last_logit = logits[-1]
             dec_logits.append(last_logit)
             dec_input = torch.cat([dec_input, last_logit], dim=-1)
-            counter += 1
-            if counter > 2:
-                break
         return dec_input
