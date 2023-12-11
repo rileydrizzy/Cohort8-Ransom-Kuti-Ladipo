@@ -56,9 +56,9 @@ $ source $(poetry env info --path)/bin/activate
 
 Here's a glimpse of the exciting features we plan to implement in the coming weeks:
 
-- [x] Add project's documentation (you are reading it now), create issues and milestones, setup document's stub, suggest
-  page layout and styling.
+- [x] Add project's documentation
 - [] Develop a Proof of Concept System
+- [] Deployment of Proof of Concept System
 
 ## Acknowledgments
 
