@@ -1,4 +1,4 @@
-"""doc
+"""Benchmark module to run on model
 """
 from torchprofile import profile_macs
 from torch import nn
