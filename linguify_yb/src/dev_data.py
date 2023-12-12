@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import zipfile
 
-from linguify_yb.src.utils.logger_util import logger
+from utils.logger_util import logger
 
 DATA_DIR = "data/asl-fingerspelling/"
 data_files = ["train.csv", "character_to_prediction_index.json"]
@@ -116,8 +116,7 @@ def main():
         logger.success("All files downloaded succesfully")
 
     except Exception as error:
-        logger.error(f"failed due to {error}")
-        logger.exception("Data unloading was unsuccesfully")
+        logger.exception(f"Data unloading was unsuccesfully due to {error}")
 
 
 if __name__ == "__main__":

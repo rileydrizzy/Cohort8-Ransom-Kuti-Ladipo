@@ -10,12 +10,11 @@ import torch
 from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
 
-from linguify_yb.src.dataset.frames_config import (FEATURE_COLUMNS, LHAND_IDX,
-                                                   RHAND_IDX)
-from linguify_yb.src.dataset.preprocess import frames_preprocess
+from dataset.frames_config import FEATURE_COLUMNS, FRAME_LEN, LHAND_IDX, RHAND_IDX
+from dataset.preprocess import clean_frames_process
 
-PHRASE_PATH = "data/asl-fingerspelling/character_to_prediction_index.json"
-METADATA = "data/asl-fingerspelling/train.csv"
+PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
+METADATA = "/kaggle/input/asl-fingerspelling/train.csv"
 
 with open(PHRASE_PATH, "r", encoding="utf-8") as f:
     character_to_num = json.load(f)
@@ -34,16 +33,24 @@ num_to_character = {j: i for i, j in character_to_num.items()}
 
 
 class TokenHashTable:
-    def __init__(self, word2index_mapping, index2word_mapping):
+    def __init__(
+        self, word2index_mapping=character_to_num, index2word_mapping=num_to_character
+    ):
         self.word2index = word2index_mapping
         self.index2word = index2word_mapping
 
     def _indexesfromsentence(self, sentence):
         return [self.word2index[word] for word in sentence]
 
-    def tensorfromsentence(self, sentence):
+    def sentence_to_tensor(self, sentence):
         indexes = self._indexesfromsentence(sentence)
-        return torch.tensor(indexes, dtype=torch.long)  # .view(1, -1)
+        return torch.tensor(indexes, dtype=torch.long)
+
+    def index_to_sentence(self, indexes_list):
+        if torch.is_tensor(indexes_list):
+            indexes_list = indexes_list.tolist()
+        words = [self.index2word[idx] for idx in indexes_list]
+        return words
 
 
 def read_file(file, file_id, landmarks_metadata_path):
@@ -59,12 +66,8 @@ def read_file(file, file_id, landmarks_metadata_path):
     for seq_id, phrase in zip(file_id_df.sequence_id, file_id_df.phrase):
         frames = saved_parueat_df[saved_parueat_df.index == seq_id].to_numpy()
         # NaN
-        right_num_nan = np.sum(np.sum(np.isnan(frames[:, RHAND_IDX]), axis=1) == 0)
-        left_num_nan = np.sum(np.sum(np.isnan(frames[:, LHAND_IDX]), axis=1) == 0)
-        total_num_nan = max(right_num_nan, left_num_nan)
-        if 2 * len(phrase) < total_num_nan:
-            frames_list.append(frames)
-            phrase_list.append(phrase)
+        frames_list.append(torch.tensor(frames))
+        phrase_list.append(phrase)
     return (frames_list, phrase_list)
 
 
@@ -94,49 +97,23 @@ class LandmarkDataset(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
-        phrase = self.labels[idx] 
+        phrase = self.labels[idx]
         frames = self.frames[idx]
 
         if self.trans:
             phrase = self._label_pre(phrase)
-            frames = frames_preprocess(frames)
+            frames = clean_frames_process(frames)
         return frames, phrase
 
-def pack_collate_func(batch):
-    frames_feature = [item[0] for item in batch]
-    phrase = [item[1] for item in batch]
-    return [frames_feature, phrase]
 
-
-def get_dataloader(file_path, file_id, batch_size):
+def get_dataloader(file_path, file_id, batch_size=32, num_workers_=1):
     lookup_table = TokenHashTable(character_to_num, num_to_character)
     dataset = LandmarkDataset(file_path, file_id, lookup_table, transform=True)
 
     dataloader = DataLoader(
         dataset,
         batch_size=batch_size,
-        num_workers=2,
+        num_workers=num_workers_,
         pin_memory=True,
     )
     return dataloader
-
-
-
-# For Debugging Train Pipeline
-
-class TestDataset(Dataset):
-    def __init__(self, num_samples=1000, input_size=10):
-        self.num_samples = num_samples
-        self.input_size = input_size
-        self.data = torch.randn(num_samples, input_size)
-        self.labels = torch.randint(0, 2, (num_samples,))
-
-    def __len__(self):
-        return self.num_samples
-
-    def __getitem__(self, idx):
-        return self.data[idx], self.labels[idx]
-
-# Generating a dataset with 1000 samples and 10 input features
-testdataset = TestDataset(num_samples=1000, input_size=10)
-TEST_LOADER = DataLoader(dataset=testdataset, batch_size=1, num_workers=2, pin_memory= True)

@@ -1,43 +1,72 @@
 """doc
 """
 
+
 FRAME_LEN = 128
+LIP = [
+    61,
+    185,
+    40,
+    39,
+    37,
+    0,
+    267,
+    269,
+    270,
+    409,
+    291,
+    146,
+    91,
+    181,
+    84,
+    17,
+    314,
+    405,
+    321,
+    375,
+    78,
+    191,
+    80,
+    81,
+    82,
+    13,
+    312,
+    311,
+    310,
+    415,
+    95,
+    88,
+    178,
+    87,
+    14,
+    317,
+    402,
+    318,
+    324,
+    308,
+]
 
-LPOSE = [13, 15, 17, 19, 21]
-RPOSE = [14, 16, 18, 20, 22]
-POSE = LPOSE + RPOSE
-
-X = (
-    [f"x_right_hand_{i}" for i in range(21)]
-    + [f"x_left_hand_{i}" for i in range(21)]
-    + [f"x_pose_{i}" for i in POSE]
-)
-Y = (
-    [f"y_right_hand_{i}" for i in range(21)]
+FRAME = ["frame"]
+N_LHAND = (
+    [f"x_left_hand_{i}" for i in range(21)]
     + [f"y_left_hand_{i}" for i in range(21)]
-    + [f"y_pose_{i}" for i in POSE]
-)
-Z = (
-    [f"z_right_hand_{i}" for i in range(21)]
     + [f"z_left_hand_{i}" for i in range(21)]
-    + [f"z_pose_{i}" for i in POSE]
 )
 
-FEATURE_COLUMNS = X + Y + Z
+N_RHAND = (
+    [f"x_right_hand_{i}" for i in range(21)]
+    + [f"y_right_hand_{i}" for i in range(21)]
+    + [f"z_right_hand_{i}" for i in range(21)]
+)
+N_POSE = (
+    [f"x_pose_{i}" for i in range(33)]
+    + [f"y_pose_{i}" for i in range(33)]
+    + [f"z_pose_{i}" for i in range(33)]
+)
+N_FACE = (
+    [f"x_face_{i}" for i in LIP]
+    + [f"y_face_{i}" for i in LIP]
+    + [f"z_face_{i}" for i in LIP]
+)
 
-X_IDX = [i for i, col in enumerate(FEATURE_COLUMNS) if "x_" in col]
-Y_IDX = [i for i, col in enumerate(FEATURE_COLUMNS) if "y_" in col]
-Z_IDX = [i for i, col in enumerate(FEATURE_COLUMNS) if "z_" in col]
-
-RHAND_IDX = [i for i, col in enumerate(FEATURE_COLUMNS) if "right" in col]
-LHAND_IDX = [i for i, col in enumerate(FEATURE_COLUMNS) if "left" in col]
-RPOSE_IDX = [
-    i
-    for i, col in enumerate(FEATURE_COLUMNS)
-    if "pose" in col and int(col[-2:]) in RPOSE
-]
-LPOSE_IDX = [
-    i
-    for i, col in enumerate(FEATURE_COLUMNS)
-    if "pose" in col and int(col[-2:]) in LPOSE
-]
+FEATURE_COLUMNS = FRAME + N_LHAND + N_RHAND + N_POSE + N_FACE

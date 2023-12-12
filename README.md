@@ -1,4 +1,4 @@
-# NSL2AUDIOO
+# NSL-2-AUDIO
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10-blue.svg?style=flat-square)](https://www.python.org/)
@@ -52,13 +52,13 @@ $ make setup
 $ source $(poetry env info --path)/bin/activate
 ```
 
-## Project Roadmap
+### Project Roadmap
 
 Here's a glimpse of the exciting features we plan to implement in the coming weeks:
 
-
-
-## Citation
+- [x] Add project's documentation
+- [] Develop a Proof of Concept System
+- [] Deployment of Proof of Concept System
 
 ## Acknowledgments
 
@@ -67,10 +67,6 @@ I would like to acknowledge the outstanding contributions of :
 **Name:** Afonja Tejumade ***(```Mentor```)***  
 **Email:** <tejumade.afonja@aisaturdayslagos.com>  
 **GitHub:** [@tejuafonja](https://github.com/tejuafonja)
-
-**Name:** Fola Animashaun ***(```Mentor```)***  
-**Email:** <afolabianimashaun@yahoo.co.uk>  
-**GitHub:** [@Modinat-A](https://github.com/Modinat-A)
 
 ## Contact
 
