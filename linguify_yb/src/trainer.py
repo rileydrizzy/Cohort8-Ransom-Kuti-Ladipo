@@ -135,7 +135,3 @@ def load_checkpoint(model, optimizer, filename):
     losses = checkpoint["loss"]
     val_losses = checkpoint["val_loss"]
     return model
-
-
-def distributed_stra_gpu():
-    pass

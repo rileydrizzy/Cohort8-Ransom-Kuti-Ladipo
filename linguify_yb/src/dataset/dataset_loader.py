@@ -42,11 +42,11 @@ class TokenHashTable:
     def _indexesfromsentence(self, sentence):
         return [self.word2index[word] for word in sentence]
 
-    def tensorfromsentence(self, sentence):
+    def sentence_to_tensor(self, sentence):
         indexes = self._indexesfromsentence(sentence)
-        return torch.tensor(indexes, dtype=torch.long)  # .view(1, -1)
+        return torch.tensor(indexes, dtype=torch.long)
 
-    def indexes_to_sentence(self, indexes_list):
+    def index_to_sentence(self, indexes_list):
         if torch.is_tensor(indexes_list):
             indexes_list = indexes_list.tolist()
         words = [self.index2word[idx] for idx in indexes_list]
