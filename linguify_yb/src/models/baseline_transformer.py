@@ -18,19 +18,19 @@ from torch import nn
 
 
 class TokenEmbedding(nn.Module):
-    """_summary_"""
+    """Embed the tokens with postion encoding"""
 
     def __init__(self, num_vocab, maxlen, embedding_dim):
         """_summary_
 
         Parameters
         ----------
-        num_vocab : _type_
-            _description_
-        maxlen : _type_
-            _description_
-        embedding_dim : _type_
-            _description_
+        num_vocab : int
+            number of vocabulary
+        maxlen : int
+            maximuin length of sequence
+        embedding_dim : int
+            embedding output dimension
         """
         super().__init__()
         self.token_embed_layer = nn.Embedding(num_vocab, embedding_dim)
@@ -41,12 +41,12 @@ class TokenEmbedding(nn.Module):
 
         Parameters
         ----------
-        x : _type_
+        x : tensors
             _description_
 
         Returns
         -------
-        _type_
+        tensors
             _description_
         """
         maxlen = x.size(-1)
@@ -79,7 +79,7 @@ class LandmarkEmbedding(nn.Module):
         self.embedding_layer = nn.Linear(256, embedding_dim)
 
     def forward(self, x):
-        # Input x should have shape (batch_size, input_size)
+        # Input x should have shape (batch_size, input_size, input_dim)
         x = x.unsqueeze(1)  # Add a channel dimension for 1D convolution
 
         # Apply convolutional layers with ReLU activation and stride 2

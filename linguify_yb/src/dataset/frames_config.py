@@ -52,6 +52,7 @@ N_LHAND = (
     + [f"y_left_hand_{i}" for i in range(21)]
     + [f"z_left_hand_{i}" for i in range(21)]
 )
+
 N_RHAND = (
     [f"x_right_hand_{i}" for i in range(21)]
     + [f"y_right_hand_{i}" for i in range(21)]

@@ -11,10 +11,15 @@ GiB = 1024 * MiB
 
 
 class BenchMarker:
+    """_summary_"""
+
     def __init__(self) -> None:
         pass
 
     def get_model_macs(self, model, inputs=None) -> int:
+        """
+        calculate the MACS of a model
+        """
         return profile_macs(model, inputs)
 
     def get_model_sparsity(self, model: nn.Module) -> float:
@@ -56,3 +61,5 @@ class BenchMarker:
         model_sparsity = self.get_model_sparsity(model)
         model_num_params = self.get_num_parameters(model)
         model_size = self.get_model_size(model)
+
+        return

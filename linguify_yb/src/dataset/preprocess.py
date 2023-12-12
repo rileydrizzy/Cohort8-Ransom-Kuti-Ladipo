@@ -3,8 +3,6 @@
 import torch
 from torch.nn import functional as F
 
-# from dataset.frames_config import FRAME_LEN
-
 # TODO Clean up code, add comments and docs
 # TODO remove print and debug statements
 
