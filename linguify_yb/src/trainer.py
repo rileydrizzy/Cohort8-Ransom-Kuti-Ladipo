@@ -15,123 +15,79 @@ import numpy as np
 import torch
 import wandb
 from torch import nn
-
+import os
+import torch
+import torch.nn.functional as F
+from torch.utils.data import Dataset, DataLoader
+import torch.multiprocessing as mp
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.distributed import init_process_group, destroy_process_group
 from utils.logger_util import logger
 
 
-def train(model, optim, loss_func, n_epochs, batch, device,):
-
-    model.to(device)
-    
-    train_losses = []
-    val_losses = []
-    val_dataloader = # get_dataloader(TRAIN_FILES[0][0], TRAIN_FILES[0][1], batch_size=batch)
-    for epoch in range(n_epochs):
-        logger.info(f"Training on epoch {epoch}.")
-        total_epochs = epoch
-        file_train_loss = []
-        for file, file_id in TRAIN_DS_FILES:
-            train_dataloader =  # get_dataloader(file, file_id, batch_size=batch)
-
-            # Performs training using mini-batches
-            train_loss = mini_batch(
-                model, train_dataloader, optim, loss_func, device, validation=False
-            )
-            file_train_loss.append(train_loss)
-        train_loss = np.mean(file_train_loss)
-        train_losses.append(train_loss)
-
-        # Performs evaluation using mini-batches
-        logger.info("Starting validation.")
-        with torch.no_grad():
-            val_loss = mini_batch(
-                model, val_dataloader, optim, loss_func, device, validation=True
-            )
-            val_losses.append(val_loss)
-
-        wandb.log(
-            {
-                "train_loss": train_loss,
-                "val_loss": val_loss,
-                "epoch": epoch,
-            }
-        )
-
-        if epoch // 2 == 0:
-            logger.info("Initiating checkpoint. Saving model and optimizer states.")
-            save_checkpoint(
-                MODEL_DIR, model, optim, total_epochs, train_losses, val_losses
-            )
+def ddp_setup():
+    init_process_group(backend="nccl")
+    torch.cuda.set_device(int(os.environ["LOCAL_RANK"]))
 
 
-def mini_batch(
-    model, dataloader, mini_batch_optim, loss_func, device, validation=False
-):
-    # The mini-batch can be used with both loaders
-    # The argument `validation`defines which loader and
-    # corresponding step function is going to be used
-    if validation:
-        step_func = val_step_func(model, loss_func)
-    else:
-        step_func = train_step_func(model, mini_batch_optim, loss_func)
+class Trainer:
+    def __init__(
+        self,
+        model: torch.nn.Module,
+        train_data: DataLoader,
+        optimizer: torch.optim.Optimizer,
+        save_every: int,
+        loss_func:
+    ) -> None:
+        self.gpu_id = int(os.environ["LOCAL_RANK"])
+        self.model = model.to(self.gpu_id)
+        self.train_data = train_data
+        self.optimizer = optimizer
+        self.save_every = save_every
+        self.epochs_run = 0
+        self.snapshot_path = "snapshot.pt"
+        if os.path.exists(snapshot_path):
+            logger.info("Loading snapshot")
+            self._load_snapshot(snapshot_path)
 
-    # Once the data loader and step function, this is the same
-    # mini-batch loop we had before
-    mini_batch_losses = []
-    for x_batch, y_batch in dataloader:
-        x_batch = x_batch.to(device)
-        y_batch = y_batch.to(device)
-        loss = step_func(x=x_batch, y=y_batch)
-        mini_batch_losses.append(loss)
-    loss = np.mean(mini_batch_losses)
-    return loss
+        self.model = DDP(self.model, device_ids=[self.gpu_id])
 
+    def _load_snapshot(self, snapshot_path):
+        loc = f"cuda:{self.gpu_id}"
+        snapshot = torch.load(snapshot_path, map_location=loc)
+        self.model.load_state_dict(snapshot["MODEL_STATE"])
+        self.epochs_run = snapshot["EPOCHS_RUN"]
+        logger.info(f"Resuming training from snapshot at Epoch {self.epochs_run}")
 
-def train_step_func(model, optim_, loss_func):
-    def perform_train_step_fn(x, y):
-        model.train()
-        preds = model(x)
-        loss = loss_func(preds, y)
+    def _run_batch(self, source, targets):
+        self.optimizer.zero_grad()
+        output = self.model(source)
+        loss = F.cross_entropy(output, targets)
         loss.backward()
-        optim_.step()
-        optim_.zero_grad()
-        return loss.item()
+        self.optimizer.step()
 
-    return perform_train_step_fn
+    def _run_epoch(self, epoch):
+        b_sz = len(next(iter(self.train_data))[0])
+        print(
+            f"[GPU{self.gpu_id}] Epoch {epoch} | Batchsize: {b_sz} | Steps: {len(self.train_data)}"
+        )
+        self.train_data.sampler.set_epoch(epoch)
+        for source, targets in self.train_data:
+            source = source.to(self.gpu_id)
+            targets = targets.to(self.gpu_id)
+            self._run_batch(source, targets)
 
+    def _save_snapshot(self, epoch):
+        snapshot = {
+            "MODEL_STATE": self.model.module.state_dict(),
+            "EPOCHS_RUN": epoch,
+        }
+        torch.save(snapshot, self.snapshot_path)
+        print(f"Epoch {epoch} | Training snapshot saved at {self.snapshot_path}")
 
-def val_step_func(model, loss_func):
-    def perform_val_step_fn(x, y):
-        model.eval()
-        preds = model(x)
-        loss = loss_func(preds, y)
-        return loss.item()
+    def train(self, max_epochs: int):
+        for epoch in range(self.epochs_run, max_epochs):
+            self._run_epoch(epoch)
+            if self.gpu_id == 0 and epoch % self.save_every == 0:
+                self._save_snapshot(epoch)
 
-    return perform_val_step_fn
-
-
-def save_checkpoint(filename, model, optimizer, total_epochs, train_losses, val_losses):
-    # Builds dictionary with all elements for resuming training
-    checkpoint = {
-        "epoch": total_epochs,
-        "model_state_dict": model.state_dict(),
-        "optimizer_state_dict": optimizer.state_dict(),
-        "loss": train_losses,
-        "val_loss": val_losses,
-    }
-
-    torch.save(checkpoint, filename)
-
-
-def load_checkpoint(model, optimizer, filename):
-    # Loads dictionary
-    checkpoint = torch.load(filename)
-
-    # Restore state for model and optimizer
-    model.load_state_dict(checkpoint["model_state_dict"])
-    optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
-
-    total_epochs = checkpoint["epoch"]
-    losses = checkpoint["loss"]
-    val_losses = checkpoint["val_loss"]
-    return model

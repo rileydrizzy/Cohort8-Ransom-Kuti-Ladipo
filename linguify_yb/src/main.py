@@ -1,11 +1,15 @@
 """
 doc
-
 # Usage:
-# python -m src/train.py \
+
+#torchrun --standalone \
+#--nproc_per_node=<NUM_GPUS>\
+src/main.py \
 # --epochs 10 \
 # --batch 512 \
+# python -m src/main.py --epochs 10 --batch 512
 """
+#TODO complete documentation
 # TODO Complete and refactor code for distributed training
 
 import os
@@ -16,11 +20,11 @@ import torch
 import wandb
 from torch import nn
 
-from utils.util import get_device_strategy, parse_args, set_seed
+from utils.util import parse_args, set_seed
 from utils.logger_util import logger
 from models.model_loader import ModelLoader
-from dataset.dataset_loader import get_dataloader
-import trainer
+from dataset.dataset_loader import get_dataset, prepare_dataloader
+from trainer import Trainer, ddp_setup, destroy_process_group()
 
 try:
     dataset_paths = "data/dev_samples.json"  # On kaggle replace with "data/dataset_paths.json" to train on full data
@@ -54,48 +58,41 @@ except AssertionError as asset_error:
     logger.exception(f"failed {asset_error}")
 
 
-def main(arg):
+def load_train_objs():
+    model = ModelLoader().get_model(arg.model)
+    # Optimizes given model/function using TorchDynamo and specified backend
+    torch.compile(model)
+    optimizer_ = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
+    dataset = get_dataset()
+    return model, optimizer_, dataset, criterion
+
+def main(arg, save_every: int, total_epochs: int, batch_size: int):
     logger.info(f"Starting training on {arg.model}")
     # To ensure reproducibility of the training process
     set_seed()
-    DEVICE = get_device_strategy(tpu=arg.tpu)
     logger.info(f"Training on {DEVICE} for {arg.epochs} epochs.")
 
-    model = ModelLoader().get_model(arg.model)
-
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
-    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
-
-    # Optimizes given model/function using TorchDynamo and specified backend
-    torch.compile(model)
-
-    logger.info("training")
-    wandb.init(
-        project="ASL-project",
-        config={
-            "learning_rate": 0.01,
-            "architecture": "Test Model",
-            "dataset": "Google ASL Landmarks",
-            "epochs": 12,
-        },
-    )
-
-    wandb.watch(model)
     try:
-        train(
-            model=arg.model,
-            optim=optimizer,
+        ddp_setup()
+        dataset, model, optimizer, criterion = load_train_objs()
+        train_dataset = prepare_dataloader(dataset, arg.batch_size, )
+        trainer = Trainer(
+            model=model,
+            train_data=train_dataset,
+            optimizer=optimizer,
+            save_every=2,
             loss_func=criterion,
-            n_epochs=arg.epochs,
-            batch=arg.batch,
-            device=DEVICE,
         )
-        logger.success(f"Training completed: {arg.epochs} epochs on {DEVICE}.")
 
+        trainer.train(total_epochs)
+        destroy_process_group()
+
+        logger.success(f"Training completed: {arg.epochs} epochs on {DEVICE}.")
     except Exception as error:
         logger.exception(f"Training failed due to an {error}.")
 
 
 if __name__ == "__main__":
-    args = parse_args()
-    main(args)
+    parse_args
+    main()

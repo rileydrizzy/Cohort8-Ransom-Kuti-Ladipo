@@ -2,18 +2,16 @@
 """
 
 import json
-
-import numpy as np
 import pandas as pd
 import pyarrow.parquet as pq
 import torch
 from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
-
-from src.dataset.frames_config import FEATURE_COLUMNS, FRAME_LEN
+from torch.utils.data.distributed import DistributedSampler
+from src.dataset.frames_config import FEATURE_COLUMNS
 from src.dataset.preprocess import clean_frames_process
 
-PHRASE_PATH = "kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
+PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
 METADATA = "/kaggle/input/asl-fingerspelling/train.csv"
 
 with open(PHRASE_PATH, "r", encoding="utf-8") as f:
@@ -42,41 +40,40 @@ class TokenHashTable:
     def _indexesfromsentence(self, sentence):
         return [self.word2index[word] for word in sentence]
 
-    def sentence_to_tensor(self, sentence):
+    def tensorfromsentence(self, sentence):
         indexes = self._indexesfromsentence(sentence)
-        return torch.tensor(indexes, dtype=torch.long)
+        return torch.tensor(indexes, dtype=torch.long)  # .view(1, -1)
 
-    def index_to_sentence(self, indexes_list):
+    def indexes_to_sentence(self, indexes_list):
         if torch.is_tensor(indexes_list):
             indexes_list = indexes_list.tolist()
         words = [self.index2word[idx] for idx in indexes_list]
         return words
 
 
-def read_file(file, file_id, landmarks_metadata_path):
+def read_file(file_id_list, landmarks_metadata_path):
     phrase_list = []
     frames_list = []
-    metadata_train_dataframe = pd.read_csv(landmarks_metadata_path)
-    file_id_df = metadata_train_dataframe.loc[
-        metadata_train_dataframe["file_id"] == file_id
-    ]
-    saved_parueat_df = pq.read_table(
-        file, columns=["sequence_id"] + FEATURE_COLUMNS
-    ).to_pandas()
-    for seq_id, phrase in zip(file_id_df.sequence_id, file_id_df.phrase):
-        frames = saved_parueat_df[saved_parueat_df.index == seq_id].to_numpy()
-        # NaN
-        frames_list.append(torch.tensor(frames))
-        phrase_list.append(phrase)
+    for file, file_id in file_id_list:
+        metadata_train_dataframe = pd.read_csv(landmarks_metadata_path)
+        file_id_df = metadata_train_dataframe.loc[
+            metadata_train_dataframe["file_id"] == file_id
+        ]
+        saved_parueat_df = pq.read_table(
+            file, columns=["sequence_id"] + FEATURE_COLUMNS
+        ).to_pandas()
+        for seq_id, phrase in zip(file_id_df.sequence_id, file_id_df.phrase):
+            frames = saved_parueat_df[saved_parueat_df.index == seq_id].to_numpy()
+            # NaN
+            frames_list.append(torch.tensor(frames))
+            phrase_list.append(phrase)
     return (frames_list, phrase_list)
 
 
 class LandmarkDataset(Dataset):
-    def __init__(self, file_path, file_id, table, transform=True):
+    def __init__(self, file_path, table, transform=True):
         self.landmarks_metadata_path = METADATA
-        self.frames, self.labels = read_file(
-            file_path, file_id, self.landmarks_metadata_path
-        )
+        self.frames, self.labels = read_file(file_path, self.landmarks_metadata_path)
         self.trans = transform
         self.table = table
 
@@ -106,14 +103,17 @@ class LandmarkDataset(Dataset):
         return frames, phrase
 
 
-def get_dataloader(file_path, file_id, batch_size=32, num_workers_=1):
+def get_dataloader(file_path, batch_size=32, num_workers_=1):
     lookup_table = TokenHashTable(character_to_num, num_to_character)
-    dataset = LandmarkDataset(file_path, file_id, lookup_table, transform=True)
+    dataset = LandmarkDataset(file_path, lookup_table, transform=True)
+    return dataset
 
-    dataloader = DataLoader(
+
+def prepare_dataloader(dataset: Dataset, batch_size: int, num_workers_:int =1):
+    return DataLoader(
         dataset,
         batch_size=batch_size,
-        num_workers=num_workers_,
         pin_memory=True,
+        num_workers=num_workers_,
+        sampler=DistributedSampler(dataset),
     )
-    return dataloader

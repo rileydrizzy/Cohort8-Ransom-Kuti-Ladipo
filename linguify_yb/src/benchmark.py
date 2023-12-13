@@ -62,4 +62,4 @@ class BenchMarker:
         model_num_params = self.get_num_parameters(model)
         model_size = self.get_model_size(model)
 
-        return
+        return model_macs, model_sparsity, model_num_params, model_size
