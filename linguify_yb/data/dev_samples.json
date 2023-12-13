@@ -1,9 +1,9 @@
 {
     "train_files": [
-        "/kaggle/input/asl-fingerspelling/train_landmarks/1019715464.parquet",
-        "/kaggle/input/asl-fingerspelling/train_landmarks/1021040628.parquet"
+        "kaggle/input/asl-fingerspelling/train_landmarks/1019715464.parquet",
+        "kaggle/input/asl-fingerspelling/train_landmarks/1021040628.parquet"
     ],
     "valid_files": [
-        "/kaggle/input/asl-fingerspelling/train_landmarks/105143404.parquet"
+        "kaggle/input/asl-fingerspelling/train_landmarks/105143404.parquet"
     ]
 }

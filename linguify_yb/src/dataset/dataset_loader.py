@@ -8,11 +8,11 @@ import torch
 from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
 from torch.utils.data.distributed import DistributedSampler
-from src.dataset.frames_config import FEATURE_COLUMNS
-from src.dataset.preprocess import clean_frames_process
+from dataset.frames_config import FEATURE_COLUMNS
+from dataset.preprocess import clean_frames_process
 
-PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
-METADATA = "/kaggle/input/asl-fingerspelling/train.csv"
+PHRASE_PATH = "kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
+METADATA = "kaggle/input/asl-fingerspelling/train.csv"
 
 with open(PHRASE_PATH, "r", encoding="utf-8") as f:
     character_to_num = json.load(f)
@@ -103,7 +103,7 @@ class LandmarkDataset(Dataset):
         return frames, phrase
 
 
-def get_dataloader(file_path, batch_size=32, num_workers_=1):
+def get_dataset(file_path):
     lookup_table = TokenHashTable(character_to_num, num_to_character)
     dataset = LandmarkDataset(file_path, lookup_table, transform=True)
     return dataset

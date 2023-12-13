@@ -2,5 +2,5 @@
 """
 from pydantic import BaseModel
 
-class Data(BaseModel):
-    
+class Arg_type(BaseModel):
+    save_every: int
