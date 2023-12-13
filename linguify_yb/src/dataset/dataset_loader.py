@@ -10,10 +10,10 @@ import torch
 from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
 
-from dataset.frames_config import FEATURE_COLUMNS, FRAME_LEN, LHAND_IDX, RHAND_IDX
-from dataset.preprocess import clean_frames_process
+from src.dataset.frames_config import FEATURE_COLUMNS, FRAME_LEN
+from src.dataset.preprocess import clean_frames_process
 
-PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
+PHRASE_PATH = "kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
 METADATA = "/kaggle/input/asl-fingerspelling/train.csv"
 
 with open(PHRASE_PATH, "r", encoding="utf-8") as f:

@@ -18,41 +18,46 @@ from torch import nn
 
 
 class TokenEmbedding(nn.Module):
-    """Embed the tokens with postion encoding"""
+    """Embed the tokens with position encoding"""
 
     def __init__(self, num_vocab, maxlen, embedding_dim):
-        """_summary_
-
+        """
         Parameters
         ----------
         num_vocab : int
             number of vocabulary
         maxlen : int
-            maximuin length of sequence
+            maximum length of sequence
         embedding_dim : int
             embedding output dimension
         """
         super().__init__()
         self.token_embed_layer = nn.Embedding(num_vocab, embedding_dim)
-        self.postion_embed_layer = nn.Embedding(maxlen, embedding_dim)
+        self.position_embed_layer = nn.Embedding(maxlen, embedding_dim)
 
     def forward(self, x):
-        """_summary_
-
+        """
         Parameters
         ----------
         x : tensors
-            _description_
+            input tensor with shape (batch_size, sequence_length)
 
         Returns
         -------
         tensors
-            _description_
+            embedded tensor with shape (batch_size, sequence_length, embedding_dim)
         """
-        maxlen = x.size(-1)
+        batch_size, maxlen = x.size()
+
+        # Token embedding
         x = self.token_embed_layer(x)
+
+        # Positional encoding
         positions = torch.arange(0, maxlen).to(x.device)
-        positions = self.postion_embed_layer(positions)
+        positions = (
+            self.position_embed_layer(positions).unsqueeze(0).expand(batch_size, -1, -1)
+        )
+
         return x + positions
 
 
@@ -97,7 +102,7 @@ class LandmarkEmbedding(nn.Module):
 
 
 class TransformerEncoder(nn.Module):
-    """_summary_"""
+    """Transformer Encoder Module"""
 
     def __init__(
         self,
@@ -106,18 +111,18 @@ class TransformerEncoder(nn.Module):
         feed_forward_dim,
         rate=0.1,
     ):
-        """_summary_
+        """Initialize the Transformer Encoder
 
         Parameters
         ----------
-        embedding_dim : _type_
-            _description_
-        num_heads : _type_
-            _description_
-        feed_forward_dim : _type_
-            _description_
+        embedding_dim : int
+            Dimension of input embeddings
+        num_heads : int
+            Number of attention heads in the multi-head attention layer
+        feed_forward_dim : int
+            Dimension of the feed-forward layer
         rate : float, optional
-            _description_, by default 0.1
+            Dropout rate, by default 0.1
         """
         super().__init__()
         self.multi_attention = nn.MultiheadAttention(embedding_dim, num_heads)
@@ -133,18 +138,25 @@ class TransformerEncoder(nn.Module):
         self.dropout2 = nn.Dropout(rate)
 
     def forward(self, inputs_x):
+        # Multi-head attention
         multi_attention_out, _ = self.multi_attention(inputs_x, inputs_x, inputs_x)
         multi_attention_out = self.dropout1(multi_attention_out)
+
+        # Residual connection and layer normalization
         out1 = self.layernorm1(inputs_x + multi_attention_out)
 
+        # Feed-forward layer
         ffn_out = self.ffn(out1)
         ffn_out = self.dropout2(ffn_out)
+
+        # Residual connection and layer normalization
         x = self.layernorm2(out1 + ffn_out)
+
         return x
 
 
 class TransformerDecoder(nn.Module):
-    """_summary_"""
+    """Transformer Decoder Module"""
 
     def __init__(self, embedding_dim, num_heads, feed_forward_dim, dropout_rate=0.1):
         super().__init__()
@@ -152,8 +164,12 @@ class TransformerDecoder(nn.Module):
         self.layernorm1 = nn.LayerNorm(embedding_dim, eps=1e-6)
         self.layernorm2 = nn.LayerNorm(embedding_dim, eps=1e-6)
         self.layernorm3 = nn.LayerNorm(embedding_dim, eps=1e-6)
-        self.decoder_multi_attention = nn.MultiheadAttention(embedding_dim, num_heads)
-        self.encoder_multi_attention = nn.MultiheadAttention(embedding_dim, num_heads)
+        self.decoder_multi_attention = nn.MultiheadAttention(
+            embedding_dim, num_heads, batch_first=True
+        )
+        self.encoder_multi_attention = nn.MultiheadAttention(
+            embedding_dim, num_heads, batch_first=True
+        )
         self.decoder_dropout = nn.Dropout(0.5)
         self.encoder_dropout = nn.Dropout(dropout_rate)
         self.ffn_dropout = nn.Dropout(dropout_rate)
@@ -163,7 +179,7 @@ class TransformerDecoder(nn.Module):
             nn.Linear(feed_forward_dim, embedding_dim),
         )
 
-    def _causal_attention_mask(self, sequence_length, batch_size=1, device=None):
+    def _causal_attention_mask(self, sequence_length, batch_size, device=None):
         mask = torch.triu(torch.ones(sequence_length, sequence_length), diagonal=1).to(
             device
         )
@@ -172,15 +188,10 @@ class TransformerDecoder(nn.Module):
         )
         return mask
 
-    def forward(
-        self,
-        encoder_out,
-        src_target_,
-    ):
-        input_shape = src_target_.size()
-        batch_size = 1  # input_shape[0]
-        seq_len = input_shape[0]
-        x_device = src_target_.device
+    def forward(self, encoder_out, src_target):
+        input_shape = src_target.size()
+        batch_size, seq_len, _ = input_shape
+        x_device = src_target.device
 
         # Mask
         causal_mask = self._causal_attention_mask(
@@ -188,12 +199,9 @@ class TransformerDecoder(nn.Module):
         )
 
         target_att, _ = self.decoder_multi_attention(
-            src_target_, src_target_, src_target_, attn_mask=causal_mask
+            src_target, src_target, src_target, attn_mask=causal_mask
         )
-        target_norm_out = self.layernorm1(
-            src_target_ + self.decoder_dropout(target_att)
-        )
-
+        target_norm_out = self.layernorm1(src_target + self.decoder_dropout(target_att))
         encoder_out, _ = self.encoder_multi_attention(
             target_norm_out, encoder_out, encoder_out
         )
@@ -201,6 +209,7 @@ class TransformerDecoder(nn.Module):
 
         ffn_out = self.ffn(enc_out_norm)
         ffn_out_norm = self.layernorm3(enc_out_norm + self.ffn_dropout(ffn_out))
+
         return ffn_out_norm
 
 
