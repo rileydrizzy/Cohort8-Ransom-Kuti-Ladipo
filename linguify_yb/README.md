@@ -8,16 +8,11 @@
 
 ## Project description
 
-***Overview:*** \
+***Overview:***
+
 
 ## Project Roadmap
 
-- **[Month Year]:** Project Initiation
-- **[Month Year]:** Core Functionality Completion
-- **[Month Year]:** User Interface Design Completion
-- **[Month Year]:** Data Integration Completion
-- **[Month Year]:** Testing and Quality Assurance Completion
-- **[Month Year]:** Deployment to Production
 
 ## How to Contribute
 
@@ -25,6 +20,11 @@ We welcome contributions from the community. If you're interested in contributin
 
 ## Support and Contact
 
-If you have questions or need assistance, feel free to reach out to [Your Contact Information].
+If you have questions or need assistance, feel free to reach out to:
+
+**Name:** **Ipadeola Ezekiel Ladipo**  
+**Email:** <ipadeolaoladipo@outlook.com>  
+**GitHub:** [@rileydrizzy](https://github.com/rileydrizzy)  
+**Linkdeln:** [Ipadeola Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)
 
 ---

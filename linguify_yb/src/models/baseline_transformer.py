@@ -25,7 +25,7 @@ class TokenEmbedding(nn.Module):
         Parameters
         ----------
         num_vocab : int
-            number of vocabulary
+            number of character vocabulary
         maxlen : int
             maximum length of sequence
         embedding_dim : int
@@ -109,7 +109,7 @@ class TransformerEncoder(nn.Module):
         embedding_dim,
         num_heads,
         feed_forward_dim,
-        rate=0.1,
+        dropout_rate=0.1,
     ):
         """Initialize the Transformer Encoder
 
@@ -121,7 +121,7 @@ class TransformerEncoder(nn.Module):
             Number of attention heads in the multi-head attention layer
         feed_forward_dim : int
             Dimension of the feed-forward layer
-        rate : float, optional
+        dropout_rate : float, optional
             Dropout rate, by default 0.1
         """
         super().__init__()
@@ -134,8 +134,8 @@ class TransformerEncoder(nn.Module):
 
         self.layernorm1 = nn.LayerNorm(embedding_dim, eps=1e-6)
         self.layernorm2 = nn.LayerNorm(embedding_dim, eps=1e-6)
-        self.dropout1 = nn.Dropout(rate)
-        self.dropout2 = nn.Dropout(rate)
+        self.dropout1 = nn.Dropout(dropout_rate)
+        self.dropout2 = nn.Dropout(dropout_rate)
 
     def forward(self, inputs_x):
         # Multi-head attention
@@ -159,6 +159,19 @@ class TransformerDecoder(nn.Module):
     """Transformer Decoder Module"""
 
     def __init__(self, embedding_dim, num_heads, feed_forward_dim, dropout_rate=0.1):
+        """Initialize the Transformer Decoder
+
+        Parameters
+        ----------
+        embedding_dim : int
+            Dimension of input embeddings
+        num_heads : int
+            Number of attention heads in the multi-head attention layer
+        feed_forward_dim : int
+            Dimension of the feed-forward layer
+        dropout_rate : float, optional
+            Dropout rate, by default 0.1
+        """
         super().__init__()
         self.num_heads_ = num_heads
         self.layernorm1 = nn.LayerNorm(embedding_dim, eps=1e-6)

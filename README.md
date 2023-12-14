@@ -40,7 +40,7 @@ Effective communication is a cornerstone of societal cohesion, and this project 
 
 ```bash
 # Clone this repository
-$ git clone
+$ git clone 
 
 # Go into the repository
 $ cd 
@@ -56,9 +56,15 @@ $ source $(poetry env info --path)/bin/activate
 
 Here's a glimpse of the exciting features we plan to implement in the coming weeks:
 
-- [x] Add project's documentation
-- [] Develop a Proof of Concept System
-- [] Deployment of Proof of Concept System
+| Feature                   | Description                                                | Status      |
+| ------------------------- | ---------------------------------------------------------- | ----------- |
+| Symptom Triage            | Implement a feature for users to inquire about symptoms.    | In Progress |
+| Medication Information    | Develop functionality for users to seek details on medications. | Planned     |
+| Appointment Scheduling    | Enable users to schedule medical appointments through the chatbot. | Planned     |
+
+## How to Contribute
+
+We welcome contributions from the community. If you're interested in contributing, please refer to the [Contributing Guidelines](CONTRIBUTING.md).
 
 ## Acknowledgments
 
@@ -68,9 +74,13 @@ I would like to acknowledge the outstanding contributions of :
 **Email:** <tejumade.afonja@aisaturdayslagos.com>  
 **GitHub:** [@tejuafonja](https://github.com/tejuafonja)
 
-## Contact
+## Support and Contact
+
+If you have questions or need assistance, feel free to reach out to:
 
 **Name:** **Ipadeola Ezekiel Ladipo**  
 **Email:** <ipadeolaoladipo@outlook.com>  
 **GitHub:** [@rileydrizzy](https://github.com/rileydrizzy)  
 **Linkdeln:** [Ipadeola Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)
+
+---
