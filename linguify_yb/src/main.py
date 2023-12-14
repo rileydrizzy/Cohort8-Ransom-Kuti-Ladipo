@@ -30,7 +30,6 @@ try:
     DATASET_PATHS = "data/dev_samples.json"
     with open(DATASET_PATHS, "r", encoding="utf-8") as json_file:
         dataset_paths_dict = json.load(json_file)
-    LANDMARK_DIR = "kaggle/input/asl-fingerspelling/train_landmarks"
 
     # Training dataset
     train_dataset_dict = dataset_paths_dict["train_files"]

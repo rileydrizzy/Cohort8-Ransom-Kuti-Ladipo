@@ -11,8 +11,8 @@ from torch.utils.data.distributed import DistributedSampler
 from dataset.frames_config import FEATURE_COLUMNS
 from dataset.preprocess import clean_frames_process
 
-PHRASE_PATH = "kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
-METADATA = "kaggle/input/asl-fingerspelling/train.csv"
+PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
+METADATA = "/kaggle/input/asl-fingerspelling/train.csv"
 
 with open(PHRASE_PATH, "r", encoding="utf-8") as f:
     character_to_num = json.load(f)
