@@ -11,7 +11,7 @@ src/main.py \
 """
 # TODO cleanup and complete documentation
 # TODO Complete and refactor code for distributed training
-
+# TODO remove test model and test data
 import os
 import json
 import torch
@@ -21,7 +21,7 @@ from torch import nn
 from utils.util import parse_args, set_seed
 from utils.logger_util import logger
 from models.model_loader import ModelLoader
-from dataset.dataset_loader import get_dataset, prepare_dataloader
+from dataset.dataset_loader import get_dataset, prepare_dataloader, get_test_dataset
 from trainer import Trainer, ddp_setup
 from torch.distributed import destroy_process_group
 
@@ -64,12 +64,13 @@ def load_train_objs(model_name, files):
     torch.compile(model)
     optimizer_ = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
     criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
-    dataset = get_dataset(files)
+    dataset = get_test_dataset()  # get_dataset(files)
     return model, optimizer_, dataset, criterion
 
 
 def main(model_name: str, save_every: int, total_epochs: int, batch_size: int):
-    logger.info(f"Starting training on {model_name}")
+    logger.info(f"Starting training on {model_name}, epoch -> {total_epochs}")
+    logger.info(f"Batch Size -> {batch_size}, model saved every -> {save_every} epoch")
 
     # To ensure reproducibility of the training process
     set_seed()

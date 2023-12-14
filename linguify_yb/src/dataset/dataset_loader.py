@@ -109,7 +109,7 @@ def get_dataset(file_path):
     return dataset
 
 
-def prepare_dataloader(dataset: Dataset, batch_size: int, num_workers_:int =1):
+def prepare_dataloader(dataset: Dataset, batch_size: int, num_workers_: int = 1):
     return DataLoader(
         dataset,
         batch_size=batch_size,
@@ -117,3 +117,21 @@ def prepare_dataloader(dataset: Dataset, batch_size: int, num_workers_:int =1):
         num_workers=num_workers_,
         sampler=DistributedSampler(dataset),
     )
+
+
+#! TEST Dataset
+class TestDataset(Dataset):
+    def __init__(self, size):
+        self.size = size
+        self.data = [(torch.rand(20), torch.rand(1)) for _ in range(size)]
+
+    def __len__(self):
+        return self.size
+
+    def __getitem__(self, index):
+        return self.data[index]
+
+
+def get_test_dataset():
+    dataset = TestDataset
+    return dataset
