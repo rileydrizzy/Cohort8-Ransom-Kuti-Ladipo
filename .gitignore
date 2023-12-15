@@ -90,9 +90,14 @@ target/
 # pytest cache
 .pytest_cache/
 
+#mics
+.gitpod.yml
+poetry.lock
+
 # Data and models
 data/*/*
 models/*
+kaggle
 !.gitkeep
 !dataset_paths.json
 !dev_samples.json
@@ -114,7 +119,6 @@ yb2audio/data/*/*
 
 # Development Enviroment
 dev.py
-#development
 dev_env.txt
 
 # Keys

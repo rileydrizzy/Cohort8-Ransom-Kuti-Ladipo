@@ -39,8 +39,8 @@ def parse_args():
     )
 
     parser.add_argument(
-        "--model",
-        default="asl_transfomer",
+        "--model_name",
+        default="baseline_transfomer",
         type=str,
         metavar="N",
         help="name of model to train",
@@ -71,6 +71,12 @@ def parse_args():
         "--resume_checkpoint",
         type=bool,
         help="Path to the checkpoint for resuming training",
+    )
+    parser.add_argument(
+        "--save_every",
+        default= 2,
+        type=int,
+        help="",
     )
 
     args = parser.parse_args()

@@ -13,16 +13,16 @@ setup:
 	poetry install
 	poetry add pre-commit
 	python pre-commit install
-	@echo "Environment setup complete"	
+	@echo "Environment setup complete"
 	
 precommit:
 	@echo "Running precommit on all files"
 	python pre-commit run --all-files
 
-export:
+export_:
 	@echo "Exporting dependencies to requirements file"
 	poetry export --without-hashes -f requirements.txt --output requirements.txt
 
-backup: # To push to Github without running precommit
-	git commit --no-verify -m "updates"
-	git push origin main
+run_container:
+	@echo "Running Docker Contain"
+	

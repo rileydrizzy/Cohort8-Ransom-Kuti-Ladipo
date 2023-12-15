@@ -16,7 +16,7 @@ import zipfile
 
 from utils.logger_util import logger
 
-DATA_DIR = "data/asl-fingerspelling/"
+DATA_DIR = "kaggle/input/asl-fingerspelling/"
 data_files = ["train.csv", "character_to_prediction_index.json"]
 train_landmarks = ["1019715464.parquet", "1021040628.parquet", "105143404.parquet"]
 TRAIN_LANDMARKS_DIR = "train_landmarks/"
@@ -30,7 +30,7 @@ COMMAND = [
     "-f",
     "FILE",
     "-p",
-    "data/raw/",
+    f"{DATA_DIR}",
 ]
 
 
@@ -98,7 +98,7 @@ def main():
     try:
         logger.info(f"Current Available space {check_storage()}GB")
         for file in data_files:
-            logger.info(f"Downloading{file} in {DATA_DIR}")
+            logger.info(f"Downloading {file} in {DATA_DIR}")
             COMMAND[6] = file
             unzipfile_path = DATA_DIR + file + ".zip"
             downlaod_file(COMMAND, unzipfile_path, DATA_DIR)

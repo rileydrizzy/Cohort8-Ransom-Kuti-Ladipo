@@ -40,25 +40,29 @@ Effective communication is a cornerstone of societal cohesion, and this project 
 
 ```bash
 # Clone this repository
-$ git clone
+$ git clone 
 
 # Go into the repository
 $ cd 
 
 # Install dependencies
-$ make setup
+$ . ./run_setup.sh
 
-# activate virtual enviroment
-$ source $(poetry env info --path)/bin/activate
 ```
 
 ### Project Roadmap
 
 Here's a glimpse of the exciting features we plan to implement in the coming weeks:
 
-- [x] Add project's documentation
-- [] Develop a Proof of Concept System
-- [] Deployment of Proof of Concept System
+| Feature                   | Description                                                | Status      |
+| ------------------------- | ---------------------------------------------------------- | ----------- |
+| SignText Model            | Implement the training of the SignText model    | In Progress |
+| Deployement of the  System| Develop and Deploy the system to Google Cloud. | Planned     |
+| User Interface    |  Developing a friendly and functionaly User Interface| Planned     |
+
+## How to Contribute
+
+We welcome contributions from the community. If you're interested in contributing, please refer to the [Contributing Guidelines](CONTRIBUTING.md).
 
 ## Acknowledgments
 
@@ -68,9 +72,13 @@ I would like to acknowledge the outstanding contributions of :
 **Email:** <tejumade.afonja@aisaturdayslagos.com>  
 **GitHub:** [@tejuafonja](https://github.com/tejuafonja)
 
-## Contact
+## Support and Contact
+
+If you have questions or need assistance, feel free to reach out to:
 
 **Name:** **Ipadeola Ezekiel Ladipo**  
 **Email:** <ipadeolaoladipo@outlook.com>  
 **GitHub:** [@rileydrizzy](https://github.com/rileydrizzy)  
 **Linkdeln:** [Ipadeola Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)
+
+---
