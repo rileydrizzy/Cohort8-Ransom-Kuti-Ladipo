@@ -26,12 +26,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Linting
-        run: |
-          cd linguify_yb
-          pylint .
-
       - name: Set up Pytest
         run: |
-          cd linguify_yb
+          cd signa2text
           pytest

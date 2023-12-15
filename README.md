@@ -46,10 +46,8 @@ $ git clone
 $ cd 
 
 # Install dependencies
-$ make setup
+$ . ./run_setup.sh
 
-# activate virtual enviroment
-$ source $(poetry env info --path)/bin/activate
 ```
 
 ### Project Roadmap
@@ -58,9 +56,9 @@ Here's a glimpse of the exciting features we plan to implement in the coming wee
 
 | Feature                   | Description                                                | Status      |
 | ------------------------- | ---------------------------------------------------------- | ----------- |
-| Symptom Triage            | Implement a feature for users to inquire about symptoms.    | In Progress |
-| Medication Information    | Develop functionality for users to seek details on medications. | Planned     |
-| Appointment Scheduling    | Enable users to schedule medical appointments through the chatbot. | Planned     |
+| SignText Model            | Implement the training of the SignText model    | In Progress |
+| Deployement of the  System| Develop and Deploy the system to Google Cloud. | Planned     |
+| User Interface    |  Developing a friendly and functionaly User Interface| Planned     |
 
 ## How to Contribute
 
