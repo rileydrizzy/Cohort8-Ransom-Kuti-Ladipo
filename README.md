@@ -59,6 +59,7 @@ Here's a glimpse of the exciting features we plan to implement in the coming wee
 | SignText Model            | Implement the training of the SignText model    | In Progress |
 | Deployement of the  System| Develop and Deploy the system to Google Cloud. | Planned     |
 | User Interface    |  Developing a friendly and functionaly User Interface| Planned     |
+| Static Transformer    |  Implementing SOTA model for the translation of Sign to Text| Planned     |
 
 ## How to Contribute
 

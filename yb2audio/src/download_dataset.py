@@ -18,7 +18,7 @@ DATA_DIR = "data/raw"
 
 
 def download_dataset_(url, destination_dir):
-    """download the dataset from kaggle api
+    """download the dataset from kaggle using it api
 
     Parameters
     ----------

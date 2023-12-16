@@ -138,8 +138,8 @@ class LandmarkDataset(Dataset):
         Initialize a LandmarkDataset.
 
         Parameters:
-            - file_path (_type_): _description_
-            - table (_type_): _description_
+            - file_path (str, pathr): _description_
+            - table (object): _description_
             - transform (bool, optional): _description_, by default True
         """
         self.landmarks_metadata_path = METADATA
