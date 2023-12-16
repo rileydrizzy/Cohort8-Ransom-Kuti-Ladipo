@@ -61,10 +61,6 @@ I would like to acknowledge the outstanding contributions of :
 **Email:** <tejumade.afonja@aisaturdayslagos.com>  
 **GitHub:** [@tejuafonja](https://github.com/tejuafonja)
 
-**Name:** Fola Animashaun ***(```Mentor```)***  
-**Email:** <afolabianimashaun@yahoo.co.uk>  
-**GitHub:** [@Modinat-A](https://github.com/Modinat-A)
-
 ## Contact
 
 **Name:** **Ipadeola Ezekiel Ladipo**  

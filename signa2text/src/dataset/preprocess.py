@@ -1,7 +1,7 @@
 """
 Module to define a function for cleaning and processing ASL Fingerspelling frames.
 Functions:
-- clean_frames_process:
+- clean_frames_process: 
 
 """
 
