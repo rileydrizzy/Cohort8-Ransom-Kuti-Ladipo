@@ -26,6 +26,8 @@ Effective communication is a cornerstone of societal cohesion, and this project 
   - Empowering NSL speakers to engage more actively in community activities.
   - Bridging the gap between the NSL community and the broader society.
 
+You can read the project proposal here, [Project Proposal](https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo/blob/main/project-proposal.pdf)
+
 ## PROJECT TIMELINE
 
 ![PROJECT TIMELINE](https://github.com/AISaturdaysLagos/Cohort8-Ransom-Kuti-Ladipo/blob/main/images/Project%20Timeline.png)
