@@ -1,30 +1,68 @@
 # Signa2Text
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.6-blue.svg?style=flat-square)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-1.7.0-orange)](https://pytorch.org/)
+[![Python](https://img.shields.io/badge/python-3.11.2-blue.svg?style=flat-square)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.1.0-orange)](https://pytorch.org/)
 
-![image/gif](https://github.com/rileydrizzy/Cohort8-Ransom-Kuti-Ladipo/blob/main/images/sign%20lang.gif)
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#project-description">Project description</a></li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+      </ul>
+    </li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
 ## Project description
 
-***Overview:***
 
+## Getting Started
 
-## Project Roadmap
+### Prerequisites
 
+```bash
+# Clone this repository
+$ git clone 
 
-## How to Contribute
+# Install dependencies
+$ make setup
 
-We welcome contributions from the community. If you're interested in contributing, please refer to the [Contributing Guidelines](CONTRIBUTING.md).
+# Go into the repository
+$ cd signa2Text
+```
 
-## Support and Contact
+### Data
 
-If you have questions or need assistance, feel free to reach out to:
+```bash
+# Tun to download the dataset
+$ python src/dataset/download_dataset.py
+
+```
+
+### TR
+
+```bash
+python src/
+```
+
+## Contact
 
 **Name:** **Ipadeola Ezekiel Ladipo**  
 **Email:** <ipadeolaoladipo@outlook.com>  
 **GitHub:** [@rileydrizzy](https://github.com/rileydrizzy)  
 **Linkdeln:** [Ipadeola Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)
 
----
+## Acknowledgments
+
+I would like to acknowledge the outstanding contributions of :
+
+**Name:** Afonja Tejumade ***(```Mentor```)***  
+**Email:** <tejumade.afonja@aisaturdayslagos.com>  
+**GitHub:** [@tejuafonja](https://github.com/tejuafonja)

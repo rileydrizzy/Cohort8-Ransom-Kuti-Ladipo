@@ -4,9 +4,64 @@
 [![Python](https://img.shields.io/badge/python-3.10-blue.svg?style=flat-square)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.7.0-orange)](https://pytorch.org/)
 
-![image/gif]()
+<a name="readme-top"></a>
 
-## Project description
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
+
+<h3 align="center">NSL-2-AUDIO</h3>
+
+  <p align="center">
+    project_description
+    <br />
+    <a href="https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo">View Demo</a>
+    ·
+    <a href="https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo/issues">Request Feature</a>
+  </p>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
 ***Overview:*** \
 This project is dedicated to the development of an Automatic Sign Language Translation system, with a specific focus on translating Nigerian Sign Language (NSL) into one of the Low-Resource Languages (LRLs) spoken in Nigeria. The primary objective is to address the communication challenges faced by the NSL community and contribute to inclusivity and employment opportunities in education and the workforce.
@@ -28,53 +83,79 @@ Effective communication is a cornerstone of societal cohesion, and this project 
 
 You can read the project proposal here, [Project Proposal](https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo/blob/main/project-proposal.pdf)
 
-## PROJECT TIMELINE
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![image/sign_lang.gif]()
 
-![PROJECT TIMELINE](https://github.com/AISaturdaysLagos/Cohort8-Ransom-Kuti-Ladipo/blob/main/images/Project%20Timeline.png)
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### SYSTEM DESIGN
+### Built With
 
-![PLANNED SYSTEM DESIGN]()
+- [![Next][Next.js]][Next-url]
+- [![Python][Python-3.11]][Python]
 
-## Setup
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Configuration
+<!-- GETTING STARTED -->
+## Getting Started
+
+This is an example of how you may give instructions on setting up your project locally.
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+In
 
 ```bash
 # Clone this repository
-$ git clone 
+$ git clone https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo
 
 # Go into the repository
-$ cd 
+$ cd Cohort8-Ransome-Kuti-Ladipo
 
 # Install dependencies
-$ . ./run_setup.sh
-
+$ make setup
 ```
 
-### Project Roadmap
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-Here's a glimpse of the exciting features we plan to implement in the coming weeks:
+<!-- USAGE EXAMPLES -->
+## Usage
 
-| Feature                   | Description                                                | Status      |
-| ------------------------- | ---------------------------------------------------------- | ----------- |
-| SignText Model            | Implement the training of the SignText model    | In Progress |
-| Deployement of the  System| Develop and Deploy the system to Google Cloud. | Planned     |
-| User Interface    |  Developing a friendly and functionaly User Interface| Planned     |
-| Static Transformer    |  Implementing SOTA model for the translation of Sign to Text| Planned     |
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## How to Contribute
+<!-- ROADMAP -->
+## Roadmap
 
-We welcome contributions from the community. If you're interested in contributing, please refer to the [Contributing Guidelines](CONTRIBUTING.md).
+- [ ] Feature 1
 
-## Acknowledgments
+See the [open issues](https://github.com/rileydrizzy/NSL_2_AUDIO/issues) for a full list of proposed features (and known issues).
 
-I would like to acknowledge the outstanding contributions of :
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-**Name:** Afonja Tejumade ***(```Mentor```)***  
-**Email:** <tejumade.afonja@aisaturdayslagos.com>  
-**GitHub:** [@tejuafonja](https://github.com/tejuafonja)
+<!-- CONTRIBUTING -->
+## Contributing
 
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTACT -->
 ## Support and Contact
 
 If you have questions or need assistance, feel free to reach out to:
@@ -84,4 +165,37 @@ If you have questions or need assistance, feel free to reach out to:
 **GitHub:** [@rileydrizzy](https://github.com/rileydrizzy)  
 **Linkdeln:** [Ipadeola Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
+
+I would like to acknowledge the outstanding contributions of :
+
+**Name:** Afonja Tejumade ***(```Mentor```)***  
+**Email:** <tejumade.afonja@aisaturdayslagos.com>  
+**GitHub:** [@tejuafonja](https://github.com/tejuafonja)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/rileydrizzy/NSL_2_AUDIO.svg?style=for-the-badge
+[contributors-url]: https://github.com/rileydrizzy/NSL_2_AUDIO/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/rileydrizzy/NSL_2_AUDIO.svg?style=for-the-badge
+[forks-url]: https://github.com/rileydrizzy/NSL_2_AUDIO/network/members
+[stars-shield]: https://img.shields.io/github/stars/rileydrizzy/NSL_2_AUDIO.svg?style=for-the-badge
+[stars-url]: https://github.com/rileydrizzy/NSL_2_AUDIO/stargazers
+[issues-shield]: https://img.shields.io/github/issues/rileydrizzy/NSL_2_AUDIO.svg?style=for-the-badge
+[issues-url]: https://github.com/rileydrizzy/NSL_2_AUDIO/issues
+[license-shield]: https://img.shields.io/github/license/rileydrizzy/NSL_2_AUDIO.svg?style=for-the-badge
+[license-url]: https://github.com/rileydrizzy/NSL_2_AUDIO/blob/master/LICENSE.txt
+[product-screenshot]: images/screenshot.png 
+[Python-url]: <https://www.python.org/>
+[Python]: 
+[PyTorch-url] : <https://pytorch.org/>
+[PyTorch]: 
+[HuggingFace-url] : <https://huggingface.co/>
+[HuggingFace]: 

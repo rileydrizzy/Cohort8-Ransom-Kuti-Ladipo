@@ -5,14 +5,15 @@ Module for distributed training with PyTorch using Distributed Data Parallel (DD
 
 # TODO cleanup and complete documentation
 # TODO Complete and refactor code for distributed training
-# TODO remove test model and test data
+# TODO remove test model and test data\
+# TODO add wandb for monitoring and saving model state
 
 import torch
 
 from torch import nn
 
 from utils.util import parse_args, set_seed
-from utils.logger_util import logger
+from utils.logging import logger
 from models.model_loader import ModelLoader
 from dataset.dataset_loader import get_dataset, prepare_dataloader, get_test_dataset
 from dataset.dataset_paths import get_dataset_paths
@@ -81,7 +82,7 @@ def main(model_name: str, save_every: int, total_epochs: int, batch_size: int):
 
         logger.success(f"Training completed: {total_epochs} epochs on.")
     except Exception as error:
-        logger.exception(f"Training failed due to {error}.")
+        logger.exception(f"Training failed due to -> {error}.")
 
 
 if __name__ == "__main__":

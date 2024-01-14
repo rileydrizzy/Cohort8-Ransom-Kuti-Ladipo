@@ -28,5 +28,4 @@ jobs:
 
       - name: Set up Pytest
         run: |
-          cd signa2text
           pytest
