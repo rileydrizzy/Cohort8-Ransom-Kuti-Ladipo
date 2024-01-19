@@ -1,9 +1,5 @@
 # NSL-2-AUDIO
 
-[![LICENSE](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.10-blue.svg?style=flat-square)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.7.0-orange)](https://pytorch.org/)
-
 <a name="readme-top"></a>
 
 [![Contributors][contributors-shield]][contributors-url]
@@ -90,8 +86,10 @@ You can read the project proposal here, [Project Proposal](https://github.com/AI
 
 ### Built With
 
-- [![Next][Next.js]][Next-url]
-- [![Python][Python-3.11]][Python]
+- [![Python][Python]][Python-url]
+- [![Pytorch][Pytorch]][Pytorch-url]
+- [![HuggingFace][HuggingFace]][HuggingFace-url]
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -194,8 +192,10 @@ I would like to acknowledge the outstanding contributions of :
 [license-url]: https://github.com/rileydrizzy/NSL_2_AUDIO/blob/master/LICENSE.txt
 [product-screenshot]: images/screenshot.png 
 [Python-url]: <https://www.python.org/>
-[Python]: 
-[PyTorch-url] : <https://pytorch.org/>
-[PyTorch]: 
-[HuggingFace-url] : <https://huggingface.co/>
-[HuggingFace]: 
+[Python]: <https://img.shields.io/badge/Python-563D7C?style=for-the-badge&logo=python&logoColor=white>
+[Pytorch-url]: <https://pytorch.org/>
+[Pytorch]: <https://img.shields.io/badge/PyTorch-0769AD?style=for-the-badge&logo=pytorch&logoColor=white>
+[HuggingFace-url]: <https://huggingface.co/>
+[HuggingFace]: <https://img.shields.io/badge/HuggingFace-DD0031?style=for-the-badge&logo=huggingface&logoColor=white>
+[GCP-url]: <https://cloud.google.com/?hl=en>
+[GCP]: <>
