@@ -90,10 +90,6 @@ target/
 # pytest cache
 .pytest_cache/
 
-#mics
-.gitpod.yml
-poetry.lock
-
 # Data and models
 data/*/*
 models/*
@@ -120,7 +116,11 @@ yb2audio/data/*/*
 # Development Enviroment
 dev.py
 dev_env.txt
+**/development/
 
 # Keys
-set_environment_variables.sh
-model_artifacts
+environment_variables.sh
+
+#miscellaneous
+.gitpod.yml
+poetry.lock
