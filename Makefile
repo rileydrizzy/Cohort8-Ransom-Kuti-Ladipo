@@ -6,14 +6,8 @@ help:
 	@echo "    precommit            runs precommit on all files"
 
 setup:
-	@echo "Installing..."
-	curl -sSL https://install.python-poetry.org | python -
-	@echo "Activating virtual environment"
-	poetry shell
-	poetry install
-	poetry add pre-commit
-	python pre-commit install
-	@echo "Environment setup complete"
+	@echo "Running setup..."
+	. run_setup.sh
 	
 precommit:
 	@echo "Running precommit on all files"
@@ -25,4 +19,4 @@ export_:
 
 run_container:
 	@echo "Running Docker Contain"
-	
+	run_container
