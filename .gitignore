@@ -119,7 +119,7 @@ dev_env.txt
 **/development/
 
 # Keys
-environment_variables.sh
+set_environment_variables.sh
 
 #miscellaneous
 .gitpod.yml
