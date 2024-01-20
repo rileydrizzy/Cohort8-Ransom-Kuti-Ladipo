@@ -1,9 +1,12 @@
 """
-Module to define constants and lists related to ASL Fingerspelling frame features.
+ASL Fingerspelling Frame Features Module
+
+This module defines constants and lists related to ASL Fingerspelling frame features.
+
 Variables:
-- FRAME_LEN:
-- LIP:
-- FEATURE_COLOUMNS:
+- FRAME_LEN: Length of each frame.
+- LIP: Indices corresponding to lip features.
+- FEATURE_COLUMNS: Combined list of feature columns, including frame, hand, pose, and face features.
 """
 
 # Length of each frame

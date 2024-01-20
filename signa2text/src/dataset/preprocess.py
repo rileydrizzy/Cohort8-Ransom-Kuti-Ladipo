@@ -1,15 +1,17 @@
 """
-Module to define a function for cleaning and processing ASL Fingerspelling frames.
+ASL Fingerspelling Frame Cleaning and Processing Module
+
+This module defines a function for cleaning and processing ASL Fingerspelling frames.
+
 Functions:
-- clean_frames_process: 
-
+- preprocess_frames(frames, max_frame_len, n_hand_landmarks, n_pose_landmarks, n_face_landmarks):
+    Cleans and processes ASL Fingerspelling frames.
 """
-
 import torch
 from torch.nn import functional as F
 
 
-def clean_frames_process(
+def preprocess_frames(
     frames,
     max_frame_len=128,
     n_hand_landmarks=21,
@@ -20,21 +22,21 @@ def clean_frames_process(
 
     Parameters
     ----------
-    frames : (torch.Tensor)
+    frames : torch.Tensor
         Input tensor containing frames.
     max_frame_len : int, optional
-         Maximum length of frames, by default 128
+         Maximum length of frames, by default 128.
     n_hand_landmarks : int, optional
-        Number of hand landmarks, by default 21
+        Number of hand landmarks, by default 21.
     n_pose_landmarks : int, optional
-        Number of pose landmarks, by default 33
+        Number of pose landmarks, by default 33.
     n_face_landmarks : int, optional
-        Number of face landmarks, by default 40
+        Number of face landmarks, by default 40.
 
     Returns
     -------
-    frames
-       torch.Tensor: Cleaned and processed frames tensor.
+    torch.Tensor
+        Cleaned and processed frames tensor.
     """
     # Clip frames to the maximum length
     frames = frames[:max_frame_len]

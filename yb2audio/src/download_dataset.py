@@ -40,7 +40,7 @@ def main():
         download_dataset_(url=URL_, destination_dir=DATA_DIR)
         logger.success(f"Dataset downloaded to {DATA_DIR} successfully.")
     except Exception as error:
-        logger.error(f"Dataset download failed due to: {error}")
+        logger.exception(f"Dataset download failed due to: {error}")
 
 
 if __name__ == "__main__":
