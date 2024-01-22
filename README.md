@@ -18,7 +18,7 @@
 <h3 align="center">NSL-2-AUDIO</h3>
 
   <p align="center">
-    project_description
+    NSL-2-AUDIO is an open-source Automatic Sign Language Translation system, specifically designed to translate Nigerian Sign Language (NSL) into one of the Low-Resource Languages (LRLs) spoken in Nigeria."
     <br />
     <a href="https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo"><strong>Explore the docs »</strong></a>
     <br />
@@ -79,7 +79,7 @@ Effective communication is a cornerstone of societal cohesion, and this project 
 
 You can read the project proposal here, [Project Proposal](https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo/blob/main/project-proposal.pdf)
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![DEMO][product-screenshot]](https://example.com)
 ![image/sign_lang.gif]()
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -96,19 +96,20 @@ You can read the project proposal here, [Project Proposal](https://github.com/AI
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+The project is structured into three distinct parts, each housed in separate directories as outlined in the project proposal. The initial phase involves translating sign language into English text, followed by the second phase, which focuses on translating the English text into Yoruba text. The final segment entails taking the translated Yoruba text and converting it into generated Yoruba audio.
+
+The `signa2text` directory is dedicated to the process of translating sign language into English text. Meanwhile, the `linguify_yb` directory serves the purpose of transforming English text into Yoruba text. Finally, the `yb2audio` directory is designated for utilizing the translated audio to generate Yoruba audio.
+
+To access any of the three directories, adhere to the specified prerequisites below and navigate into the respective directory.
 
 ### Prerequisites
 
-In
-
 ```bash
 # Clone this repository
-$ git clone https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo
+$ git clone https://github.com/rileydrizzy/NSL_2_AUDIO
 
 # Go into the repository
-$ cd Cohort8-Ransome-Kuti-Ladipo
+$ cd NSL_2_AUDIO
 
 # Install dependencies
 $ make setup
@@ -149,7 +150,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -190,7 +191,7 @@ I would like to acknowledge the outstanding contributions of :
 [issues-url]: https://github.com/rileydrizzy/NSL_2_AUDIO/issues
 [license-shield]: https://img.shields.io/github/license/rileydrizzy/NSL_2_AUDIO.svg?style=for-the-badge
 [license-url]: https://github.com/rileydrizzy/NSL_2_AUDIO/blob/master/LICENSE.txt
-[product-screenshot]: images/screenshot.png 
+[product-screenshot]: images/screenshot.png
 [Python-url]: <https://www.python.org/>
 [Python]: <https://img.shields.io/badge/Python-563D7C?style=for-the-badge&logo=python&logoColor=white>
 [Pytorch-url]: <https://pytorch.org/>
