@@ -1,4 +1,4 @@
-# Yoruba  to Audio-Loom (***yb2audio***)
+# Yb2Audio
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11.2-blue.svg?style=flat-square)](https://www.python.org/)
@@ -13,6 +13,7 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#prerequisites">Data</a></li>
       </ul>
     </li>
     <li><a href="#contact">Contact</a></li>
@@ -49,13 +50,16 @@ The successful implementation of this generative AI approach holds promising imp
 ### Prerequisites
 
 ```bash
-# Clone this repository
-$ git clone 
+# Clone the main repository
+$ git clone https://github.com/rileydrizzy/NSL_2_AUDIO
+
+# Go into the main repository
+$ cd NSL_2_AUDIO
 
 # Install dependencies
 $ make setup
 
-# Go into the repository
+# To go into this directory
 $ cd yb2audio
 ```
 
@@ -65,12 +69,6 @@ $ cd yb2audio
 # Tun to download the dataset
 $ python src/dataset/download_dataset.py
 
-```
-
-### TR
-
-```bash
-python src/
 ```
 
 ## Contact
