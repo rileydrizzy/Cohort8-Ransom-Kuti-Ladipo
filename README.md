@@ -80,7 +80,7 @@ Effective communication is a cornerstone of societal cohesion, and this project 
 You can read the project proposal here, [Project Proposal](https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo/blob/main/project-proposal.pdf)
 
 [![DEMO][product-screenshot]](https://example.com)
-![image/sign_lang.gif]()
+![sign_lang_gif](images/sign_lang.gif)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
