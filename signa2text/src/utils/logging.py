@@ -26,8 +26,4 @@ LOG_DIR = Path("logs")
 log_filepath = Path(LOG_DIR, "running_logs.log")
 Path.mkdir(LOG_DIR, exist_ok=True)
 
-logger.add(
-    log_filepath,
-    format=FORMAT_STYLE,
-    level="INFO",
-)
+logger.add(log_filepath, format=FORMAT_STYLE, level="INFO", retention="3 days")
