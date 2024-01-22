@@ -7,7 +7,7 @@ help:
 
 setup:
 	@echo "Running setup..."
-	. run_setup.sh
+	. ./run_setup.sh
 	
 precommit:
 	@echo "Running precommit on all files"
