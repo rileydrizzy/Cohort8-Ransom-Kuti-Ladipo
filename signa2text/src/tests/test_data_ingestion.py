@@ -1,16 +1,20 @@
-"doc"
+"""
+Test Module for Dataset Ingestion and Preprocessing
+
+This module contains test functions for dataset ingestion, preprocessing and tokenization.
+
+Functions:
+- test_frames_preprocess(frames): Tests the preprocessing of frames.
+
+- test_token_hash_table(): Tests the TokenHashTable for sentence tokenization.
+"""
 
 import pytest
 
 import torch
-from src.dataset.frames_config import FRAME_LEN
-from src.dataset.preprocess import clean_frames_process
-from src.dataset.dataset_loader import TokenHashTable
-
-# TODO test for frames in right shapes, in tensor, frames are normalize
-# TODO test for frames dont contain NAN
-
-# TODO test for labels are tokensize
+from dataset.frames_config import FRAME_LEN
+from dataset.preprocess import preprocess_frames
+from dataset.dataset_loader import TokenHashTable
 
 
 @pytest.mark.parametrize(
@@ -18,19 +22,28 @@ from src.dataset.dataset_loader import TokenHashTable
     [torch.randn(num_frames, 345) for num_frames in [10, 108, 128, 156, 750, 420]],
 )
 def test_frames_preprocess(frames):
-    """doc"""
-    frames = clean_frames_process(frames)
+    """Tests the preprocessing of frames.
+
+    Parameters
+    ----------
+    frames : torch.Tensor
+        Input tensor containing frames for preprocessing.
+    """
+    frames = preprocess_frames(frames)
     expected_output_shape = (128, 345)
     assert (
         expected_output_shape == frames.shape
-    ), f"frames shape should be {expected_output_shape}"
+    ), f"Frames shape should be {expected_output_shape}, got {frames.shape}"
 
 
 def test_token_hash_table():
-    token_table = TokenHashTable()
+    """
+    Tests the TokenHashTable for sentence tokenization.
+    """
+    token_lookup_table = TokenHashTable()
     sample_sentence = "this is a test run"
     sample_sentence_len = len(sample_sentence)
-    sample_sentence_token = [
+    sample_sentence_tokens = [
         51,
         39,
         40,
@@ -50,14 +63,20 @@ def test_token_hash_table():
         52,
         45,
     ]
-    sample_sentence_token = torch.tensor(sample_sentence_token, dtype=torch.long)
-    tokenize_result = token_table.sentence_to_tensor(sample_sentence)
+    sample_sentence_tokens = torch.tensor(sample_sentence_tokens, dtype=torch.long)
+    tokenize_result = token_lookup_table.sentence_to_tensor(sample_sentence)
+
+    # Assert the length of tokenize text
+    assert sample_sentence_len == len(
+        tokenize_result
+    ), f"Expexted length of tokenize text to be {sample_sentence_len}, got {len(tokenize_result)}"
 
     is_same = all(
         torch.equal(idx1, idx2)
-        for idx1, idx2 in zip(sample_sentence_token, tokenize_result)
+        for idx1, idx2 in zip(sample_sentence_tokens, tokenize_result)
     )
-    assert sample_sentence_len == len(tokenize_result)
-    assert is_same == True
+    # Assert tokens match the expected value
+    assert is_same == True, "Tokens do not match the expected value"
+
     # Assert that clean_frames is a PyTorch tensor
-    assert torch.is_tensor(tokenize_result), "is not PyTorch tensor"
+    assert torch.is_tensor(tokenize_result), "Tokens are not PyTorch tensor"

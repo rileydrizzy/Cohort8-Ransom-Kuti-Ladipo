@@ -3,9 +3,16 @@
 This module provides functions to download datasets the IroyinSpeech dataset.
 
 Functions:
-- download_dataset(url: str, destination: str) -> bool:
+- download_dataset(url: str, destination: str):
   Downloads a dataset from the given URL to the specified destination directory.
 - main - the main function to run the script
+
+Usage:
+    To download the dataset, run the script directly.
+
+Example:
+    $ python src/download_dataset.py
+
 """
 
 import os
@@ -34,13 +41,15 @@ def download_dataset_(url, destination_dir):
 
 
 def main():
-    """main function to run the script"""
+    """
+    main function to run the script
+    """
     logger.info(f"Commencing downloading the dataset into {DATA_DIR}")
     try:
         download_dataset_(url=URL_, destination_dir=DATA_DIR)
         logger.success(f"Dataset downloaded to {DATA_DIR} successfully.")
     except Exception as error:
-        logger.error(f"Dataset download failed due to: {error}")
+        logger.exception(f"Dataset download failed due to: {error}")
 
 
 if __name__ == "__main__":

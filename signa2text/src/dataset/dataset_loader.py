@@ -1,15 +1,23 @@
 """
-Module to define datasets and dataloaders for ASL Fingerspelling project.
+ASL Fingerspelling Dataset Module
+
+This module defines classes and functions for handling datasets and dataloaders for the
+ASL Fingerspelling project.
 
 Classes:
-- TokenHashTable: A class for handling token-to-index and index-to-token mappings.
-- LandmarkDataset: A dataset class for ASL Fingerspelling frames,\
-    including methods for processing and cleaning frames.
+- TokenHashTable: Handles token-to-index and index-to-token mappings.
+
+- LandmarkDataset: Dataset class for ASL Fingerspelling frames.\
+    Includes methods for processing and cleaning frames and phrase.
 
 Functions:
-- read_file: Read data from file based on file_id_list and landmarks_metadata_path.
-- get_dataset: Create a dataset with token-to-index mapping.
-- prepare_dataloader: Prepare a dataloader with distributed sampling.
+- read_file(file_id_list, landmarks_metadata_path): Reads data from a file based on file IDs\
+    and landmarks metadata path.
+
+- get_dataset(file_path): Creates a dataset with a token-to-index mapping.
+
+- prepare_dataloader(dataset, batch_size, num_workers_= 1): Prepares a dataloader with\
+    distributed sampling.
 """
 
 
@@ -21,7 +29,7 @@ from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
 from torch.utils.data.distributed import DistributedSampler
 from dataset.frames_config import FEATURE_COLUMNS
-from dataset.preprocess import clean_frames_process
+from dataset.preprocess import preprocess_frames
 
 # File paths for metadata and phrase-to-index mapping
 PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
@@ -49,53 +57,72 @@ num_to_character = {j: i for i, j in character_to_num.items()}
 
 
 class TokenHashTable:
+    """
+    TokenHashTable handles token-to-index and index-to-token mappings for sequence data.
+
+    This class is designed to facilitate the conversion between sequences of tokens
+    and their corresponding indices, providing methods for transforming sentences
+    to tensors and vice versa.
+    """
+
     def __init__(
         self, word2index_mapping=character_to_num, index2word_mapping=num_to_character
     ):
-        """
-        Initialize a TokenHashTable to handle token-to-index and index-to-token mapping.
+        """Initialize a TokenHashTable.
 
-        Parameters:
-            word2index_mapping (dict): Mapping from word to index.
-            index2word_mapping (dict): Mapping from index to word.
+        Parameters
+        ----------
+        word2index_mapping : dict, optional
+            Mapping from word to index, by default character_to_num.
+        index2word_mapping : dict, optional
+            Mapping from index to word, by default num_to_character.
         """
         self.word2index = word2index_mapping
         self.index2word = index2word_mapping
 
-    def _indexesfromsentence(self, sentence):
-        """
-        Convert a sentence into a list of corresponding indices.
+    def _indexes_from_sentence(self, sentence):
+        """Convert a sentence into a list of corresponding indices.
 
-        Parameters:
-            sentence (list): List of words in a sentence.
+        Parameters
+        ----------
+        sentence : list
+            List of words in a sentence.
 
-        Returns:
-            list: List of indices corresponding to words in the sentence.
+        Returns
+        -------
+        list
+            List of indices corresponding to words in the sentence.
         """
         return [self.word2index[word] for word in sentence]
 
-    def tensorfromsentence(self, sentence):
-        """
-        Convert a sentence into a tensor of indices.
+    def tensor_from_sentence(self, sentence):
+        """Convert a sentence into a tensor of indices.
 
-        Parameters:
-            sentence (list): List of words in a sentence.
+        Parameters
+        ----------
+        sentence : list
+            List of words in a sentence.
 
-        Returns:
-            torch.Tensor: Tensor of indices.
+        Returns
+        -------
+        torch.Tensor
+            Tensor of indices.
         """
-        indexes = self._indexesfromsentence(sentence)
+        indexes = self._indexes_from_sentence(sentence)
         return torch.tensor(indexes, dtype=torch.long)
 
     def indexes_to_sentence(self, indexes_list):
-        """
-        Convert a list of indices into a list of corresponding words.
+        """Convert a list of indices into a list of corresponding words.
 
-        Parameters:
-            indexes_list (list or torch.Tensor): List or tensor of indices.
+        Parameters
+        ----------
+        indexes_list : list or torch.Tensor
+            List or tensor of indices.
 
-        Returns:
-            list: List of words corresponding to the indices.
+        Returns
+        -------
+        list
+            List of words corresponding to the indices.
         """
         if torch.is_tensor(indexes_list):
             indexes_list = indexes_list.tolist()
@@ -105,80 +132,121 @@ class TokenHashTable:
 
 def read_file(file_id_list, landmarks_metadata_path):
     """
-    Read data from file based on file_id_list and landmarks_metadata_path.
+    Read data from files based on file IDs and landmarks metadata.
 
-    Parameters:
-        file_id_list (list): List of tuples containing file paths and corresponding file_ids.
-        landmarks_metadata_path (str): Path to the metadata file.
+    Parameters
+    ----------
+    file_id_list : list
+        List of tuples containing file paths and corresponding file IDs.
+    landmarks_metadata_path : str
+        Path to the metadata file.
 
-    Returns:
-        tuple: A tuple containing lists of frames and phrases.
+    Returns
+    -------
+    tuple
+        A tuple containing lists of frames and phrases.
     """
     phrase_list = []
     frames_list = []
-    for file, file_id in file_id_list:
+
+    for file_path, file_id in file_id_list:
         metadata_train_dataframe = pd.read_csv(landmarks_metadata_path)
         file_id_df = metadata_train_dataframe.loc[
             metadata_train_dataframe["file_id"] == file_id
         ]
+
         saved_parquet_df = pq.read_table(
-            file, columns=["sequence_id"] + FEATURE_COLUMNS
+            file_path, columns=["sequence_id"] + FEATURE_COLUMNS
         ).to_pandas()
+
         for seq_id, phrase in zip(file_id_df.sequence_id, file_id_df.phrase):
             frames = saved_parquet_df[saved_parquet_df.index == seq_id].to_numpy()
-            # Handle NaN values
             frames_list.append(torch.tensor(frames))
             phrase_list.append(phrase)
+
     return frames_list, phrase_list
 
 
 class LandmarkDataset(Dataset):
-    def __init__(self, file_path, table, transform=True):
+    """
+    LandmarkDataset represents a dataset of landmarks for sequence processing tasks.
+    """
+
+    def __init__(self, file_path, token_table, transform_=True):
         """
         Initialize a LandmarkDataset.
 
-        Parameters:
-            - file_path (str, pathr): _description_
-            - table (object): _description_
-            - transform (bool, optional): _description_, by default True
+        Parameters
+        ----------
+        file_path : str or path-like
+            Path to the dataset file.
+        token_table : object
+            An object representing a token table for phrase preprocessing.
+        transform_ : bool, optional
+            Indicates whether to apply transformations, by default True.
         """
         self.landmarks_metadata_path = METADATA
         self.frames, self.labels = read_file(file_path, self.landmarks_metadata_path)
-        self.trans = transform
-        self.table = table
+        self.transform = transform_
+        self.token_lookup_table = token_table
 
-    def _label_pre(self, label_sample):
+    def _phrase_preprocess(self, phrase_):
         """
-        Preprocess label samples.
+        Tokenizes the input phrase.
 
-        Parameters:
-            - label_sample (_type_): _description_
+        Parameters
+        ----------
+        phrase_ : str
+            The original phrase
 
-        Returns:
-            - _type_: _description_
+        Returns
+        -------
+        List[int]
+            A list containing ints representing strings in the tokenized phrase.
         """
-        sample = START_TOKEN + label_sample + END_TOKEN
-        new_phrase = self.table.tensorfromsentence(list(sample))
-        ans = F.pad(
-            input=new_phrase,
-            pad=[0, 64 - new_phrase.shape[0]],
+        phrase = START_TOKEN + phrase_ + END_TOKEN
+        tokenize_phrase = self.token_lookup_table.tensor_from_sentence(list(phrase))
+        tokenzie_phrase = F.pad(
+            input=tokenize_phrase,
+            pad=[0, 64 - tokenize_phrase.shape[0]],
             mode="constant",
             value=PAD_TOKEN_IDX,
         )
-        return ans
+        return tokenzie_phrase
 
     def __len__(self):
+        """
+        Returns the length of the dataset.
+
+        Returns
+        -------
+        int
+            Length of the dataset.
+        """
         return len(self.labels)
 
     def __getitem__(self, idx):
+        """
+        Returns a tuple containing frames and corresponding preprocessed phrase for a given index.
+
+        Parameters
+        ----------
+        idx : int or slice
+            Index or slice to retrieve from the dataset.
+
+        Returns
+        -------
+        tuple
+            A tuple containing frames and preprocessed labels.
+        """
         if torch.is_tensor(idx):
             idx = idx.tolist()
         phrase = self.labels[idx]
         frames = self.frames[idx]
 
-        if self.trans:
-            phrase = self._label_pre(phrase)
-            frames = clean_frames_process(frames)
+        if self.transform:
+            phrase = self._phrase_preprocess(phrase)
+            frames = preprocess_frames(frames)
         return frames, phrase
 
 
@@ -186,28 +254,45 @@ def get_dataset(file_path):
     """
     Create a dataset with token-to-index mapping.
 
-    Parameters:
-        - file_path (_type_): _description_
+    Parameters
+    ----------
+    file_path : str or path-like
+        Path to the file containing the dataset.
 
-    Returns:
-        - _type_: _description_
+    Returns
+    -------
+    dataset : LandmarkDataset
+        An instance of LandmarkDataset with token-to-index mapping and frames.
     """
+
     lookup_table = TokenHashTable(character_to_num, num_to_character)
-    dataset = LandmarkDataset(file_path, lookup_table, transform=True)
+    dataset = LandmarkDataset(file_path, lookup_table, transform_=True)
+
     return dataset
 
 
 def prepare_dataloader(dataset: Dataset, batch_size: int, num_workers_: int = 1):
     """
-    Prepare a dataloader with distributed sampling.
+    Prepare a DataLoader with distributed sampling.
 
-    Parameters:
-        dataset (Dataset): The dataset to load.
-        batch_size (int): Number of samples per batch.
-        num_workers_ (int, optional): Number of workers for data loading, by default 1.
+    Parameters
+    ----------
+    dataset : Dataset
+        The dataset to load.
 
-    Returns:
-        DataLoader: A DataLoader instance for the specified dataset.
+    batch_size : int
+        Number of samples per batch.
+
+    num_workers_ : int, optional
+        Number of workers for data loading, by default 1.
+
+    Returns
+    -------
+    DataLoader
+        A DataLoader instance for the specified dataset.
+
+    Notes
+    Utilize distributed sampling for better training efficiency.
     """
     return DataLoader(
         dataset,
@@ -233,5 +318,17 @@ class TestDataset(Dataset):
 
 #! Function to get a test dataset for debugging train pipeline
 def get_test_dataset():
+    """_summary_
+
+    Parameters
+    ----------
+    pass_ : _type_
+        _description_
+
+    Returns
+    -------
+    _type_
+        _description_
+    """
     dataset = TestDataset
     return dataset

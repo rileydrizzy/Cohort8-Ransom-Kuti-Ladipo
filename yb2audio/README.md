@@ -1,8 +1,25 @@
-# Yoruba  to Audio-Loom (***yb2audio***)
+# Yb2Audio
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.10-blue.svg?style=flat-square)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/python-3.11.2-blue.svg?style=flat-square)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1.0-orange)](https://pytorch.org/)
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#project-description">Project description</a></li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#prerequisites">Data</a></li>
+      </ul>
+    </li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
 ## Project description
 
@@ -28,21 +45,21 @@ In our ongoing pursuit of advancing communication accessibility for Nigerian Sig
 **Future Implications:**
 The successful implementation of this generative AI approach holds promising implications for various applications not only to our main project, including but not limited to improved accessibility in education, enhanced communication tools for diverse linguistic communities, and a more inclusive digital landscape.
 
-## Setup
+## Getting Started
 
-### Configuration
+### Prerequisites
 
 ```bash
-# Clone this repository
-$ git clone
+# Clone the main repository
+$ git clone https://github.com/rileydrizzy/NSL_2_AUDIO
+
+# Go into the main repository
+$ cd NSL_2_AUDIO
 
 # Install dependencies
 $ make setup
 
-# activate virtual enviroment
-$ source $(poetry env info --path)/bin/activate
-
-# Go into the repository
+# To go into this directory
 $ cd yb2audio
 ```
 
@@ -51,7 +68,15 @@ $ cd yb2audio
 ```bash
 # Tun to download the dataset
 $ python src/dataset/download_dataset.py
+
 ```
+
+## Contact
+
+**Name:** **Ipadeola Ezekiel Ladipo**  
+**Email:** <ipadeolaoladipo@outlook.com>  
+**GitHub:** [@rileydrizzy](https://github.com/rileydrizzy)  
+**Linkdeln:** [Ipadeola Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)
 
 ## Acknowledgments
 
@@ -60,10 +85,3 @@ I would like to acknowledge the outstanding contributions of :
 **Name:** Afonja Tejumade ***(```Mentor```)***  
 **Email:** <tejumade.afonja@aisaturdayslagos.com>  
 **GitHub:** [@tejuafonja](https://github.com/tejuafonja)
-
-## Contact
-
-**Name:** **Ipadeola Ezekiel Ladipo**  
-**Email:** <ipadeolaoladipo@outlook.com>  
-**GitHub:** [@rileydrizzy](https://github.com/rileydrizzy)  
-**Linkdeln:** [Ipadeola Ladipo](https://www.linkedin.com/in/ladipo-ipadeola/)
