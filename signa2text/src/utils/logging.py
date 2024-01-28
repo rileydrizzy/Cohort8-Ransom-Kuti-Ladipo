@@ -1,6 +1,5 @@
 """
 This module provides a simple utility for logging messages to a file and the console.
-logging_utility
 
 Usage:
 - Import the module: `from utils.logger_util import logger`
@@ -10,8 +9,8 @@ Usage:
   - `logger.warning("Warning message")`
   - `logger.error("Error message")`
   - `logger.critical("Critical message")`
-  - `logger.exception(" ")`
-  - `logger.success("success messgae")`
+  - `logger.exception("Exception message")`
+  - `logger.success("Success message")`
 """
 
 from pathlib import Path
