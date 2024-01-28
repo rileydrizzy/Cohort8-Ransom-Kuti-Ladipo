@@ -1,0 +1,9 @@
+args:
+  model_name: "baseline_transformer"
+  save_every: 2
+  epochs: 2
+  batch: 64
+  tpu: False
+  resume_checkpoint: False
+  dev_mode: True
+  wandb_: False
