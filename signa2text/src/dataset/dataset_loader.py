@@ -271,13 +271,13 @@ def get_dataset(file_path):
     return dataset
 
 
-def prepare_dataloader(dataset: Dataset, batch_size: int, num_workers_: int = 1):
+def prepare_dataloader(dataset, batch_size, num_workers_=1):
     """
     Prepare a DataLoader with distributed sampling.
 
     Parameters
     ----------
-    dataset : Dataset
+    dataset : torch.utils.data.Dataset
         The dataset to load.
 
     batch_size : int

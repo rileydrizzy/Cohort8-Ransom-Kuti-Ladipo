@@ -61,4 +61,4 @@ def get_dataset_paths(dev_mode=True):
     ), "Failed getting Valid Files path"
     valid_ds_files = list(zip(valid_dataset_dict, valid_file_ids))
 
-    return train_ds_files, valid_ds_files
+    return (train_ds_files, valid_ds_files)
