@@ -18,7 +18,7 @@ Example:
 import os
 
 import opendatasets as opd
-from loguru import logger
+from utils.logging import logger
 
 URL_ = "https://www.kaggle.com/datasets/rileydrizzy/iroyinspeech"
 DATA_DIR = "data/raw"
