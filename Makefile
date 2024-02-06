@@ -2,7 +2,7 @@
 
 help:
 	@echo "    setup                Set up the environment with the required dependencies"
-	@echo "    export               save the dependencies onto the requirements txt file"
+	@echo "    export               save the dependencies onto the requirements text file"
 	@echo "    precommit            runs precommit on all files"
 
 setup:
