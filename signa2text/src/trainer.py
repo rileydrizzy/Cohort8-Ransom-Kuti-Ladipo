@@ -8,14 +8,15 @@ Functions:
 
 """
 
-# TODO Implement and refactor code for distributed training
+# TODO Implement and refactor code for distributed training on Multi-GPU
 # TODO AMP Mixed Trainig and Scaled Loss
-# TODO Consider adding TPU training
+# TODO Consider adding TPU training using PyTorch Lightning
+
 
 import os
 import wandb
 import torch
-
+import lightning as L
 from utils.logging import logger
 
 
@@ -114,6 +115,8 @@ class Trainer:
             - targets: _type_
         """
         self.optimizer.zero_grad()
+        # TODO source and targets
+
         output = self.model(source)
         loss = self.loss_func(output, targets)
         loss.backward()
