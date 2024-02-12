@@ -17,10 +17,10 @@ from utils.logging import logger
 from models.model_loader import ModelLoader
 from dataset.dataset_loader import get_dataset, prepare_dataloader  # get_test_dataset
 from dataset.dataset_paths import get_dataset_paths
+from lightning import Trainer
+from trainer import LitModule, wandb_logger
 
-from trainer import Trainer
 
-# from torch.distributed import destroy_process_group
 
 
 def load_train_objs(model_name):
@@ -44,17 +44,14 @@ def load_train_objs(model_name):
 
     # Optimizes given model/function using TorchDynamo and specified backend
     torch.compile(model)
-
-    optimizer_ = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
     criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
 
     return (
-        model,
-        optimizer_,
+        model
         criterion,
     )
 
-
+@
 def main(
     model_name: str,
     save_every: int,
@@ -81,28 +78,22 @@ def main(
 
         train_paths, valid_paths = get_dataset_paths(dev_mode=True)
 
-        model, optimizer, criterion = load_train_objs(model_name)
+        model, criterion = load_train_objs(model_name)
 
-        train_dataset = get_dataset(train_paths)  # get_test_dataset()
+        train_dataset = get_dataset(train_paths)  
         train_dataset = prepare_dataloader(
             train_dataset,
             batch_size,
         )
-        valid_dataset = get_dataset(valid_paths)  # get_test_dataset()
+        valid_dataset = get_dataset(valid_paths)  
         valid_dataset = prepare_dataloader(
             valid_dataset,
             batch_size,
         )
 
-        trainer = Trainer(
-            model=model,
-            train_data=train_dataset,
-            optimizer=optimizer,
-            loss_func=criterion,
-            resume_checkpoint=False,
-        )
+        model = LitModule(model=model, loss_criterion=criterion)
+        trainer = Trainer(logger=wandb_logger)
 
-        trainer.train(total_epochs, save_every=save_every, wandb_monitor=False)
 
         logger.success(f"Training completed: {total_epochs} epochs .")
 
