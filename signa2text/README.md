@@ -52,7 +52,10 @@ $ cd signa2Text
 $ python src/download_dev_data.py
 ```
 
+<!-- CONTACT -->
 ## Contact
+
+If you have questions or need assistance, feel free to reach out to:
 
 **Name:** **Ipadeola Ezekiel Ladipo**  
 **Email:** <ipadeolaoladipo@outlook.com>  
