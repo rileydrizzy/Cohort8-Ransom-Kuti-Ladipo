@@ -9,160 +9,124 @@ Functions:
 """
 
 # TODO Implement and refactor code for distributed training on Multi-GPU
-# TODO AMP Mixed Trainig and Scaled Loss
 # TODO Consider adding TPU training using PyTorch Lightning
+# TODO implement loss and metrics
 
-
-import os
-import wandb
+from pathlib import Path
 import torch
 import lightning as L
-from utils.logging import logger
+import wandb
+
+# from utils.logging import logger
+from lightning.pytorch.callbacks import (
+    ModelCheckpoint,
+    EarlyStopping,
+    DeviceStatsMonitor,
+)
+from lightning.pytorch.loggers import WandbLogger
+from lightning.pytorch.profilers import SimpleProfiler
+
+# from metrics import NormalizedLevenshteinDistance
+
+PROJECT_NAME = "NSL_2_AUDIO"
+
+# Checkpoint Filename Template
+FILENAME_TEMPLATE = "NSL-2-AUDIO-{epoch}-{val_loss:.2f}"
+
+MAX_TRAIN_TIME = "00:06:00:00"
+
+wandb_logger = WandbLogger(project=PROJECT_NAME, log_model="all")
+
+profiler = SimpleProfiler(dirpath=".", filename="perf_logs")
 
 
-class Trainer:
+class LitModule(L.LightningModule):
     """_summary_"""
 
-    def __init__(
-        self,
-        model,
-        train_data,
-        optimizer,
-        loss_func,
-        resume_checkpoint=False,
-    ):
-        """
-        Initialize a Trainer instance.
+    def __init__(self, model, loss_criterion, metric, model_name="test"):
+        super().__init__()
+        self.model = model
+        self.loss_criterion = loss_criterion
+        self.metric = metric
+        self.checkpoint_dir = f"artifact/{model_name}/"
+        wandb_logger.watch(model, log="all")
+        self.save_hyperparameters()
 
-        Parameters
-        ----------
-        model : torch.nn.Module
-            The neural network model.
-        train_data : DataLoader
-            The DataLoader for training data.
-        optimizer : torch.optim.Optimizer
-            The optimizer for training.
-        loss_func : _type_
-            The loss function for training.
-        resume_checkpoint : bool
-            _description_
-        """
-        self.gpu_device = (
-            "cuda" if torch.cuda.is_available() else "cpu"
-        )  # int(os.environ["LOCAL_RANK"])
-        self.model = model.to(self.gpu_device)
-        self.train_data = train_data
-        self.optimizer = optimizer
-        self.loss_func = loss_func
-        self.epochs_run = 0
-        self.snapshot_path = "snapshot.pt"
-        if os.path.exists(self.snapshot_path):
-            self._load_snapshot(snapshot_path=self.snapshot_path)
-        elif resume_checkpoint:
-            self._load_snapshot(from_wandb=True)
-
-    def _load_snapshot(self, snapshot_path=None, from_wandb=False):
-        """
-        Load a snapshot of the model.
-
-        Parameters
-        ----------
-        snapshot_path : str, optional
-            Path to the snapshot file, by default None
-        from_wandb : bool, optional
-            _description_, by default False
-        """
-        logger.info("Loading snapshot")
+    def resume_training_(self, from_wandb=False, MODEL_RUN_ID=None, VERSION="latest"):
         if from_wandb:
-            # TODO load from wandb
-            self.model = None
-            self.epochs_run = None
-        else:
-            loc = "cuda:0"
-            snapshot = torch.load(snapshot_path, map_location=loc)
-            self.model.load_state_dict(snapshot["MODEL_STATE"])
-            self.epochs_run = snapshot["EPOCHS_RUN"]
-        logger.info(f"Resuming training from snapshot at Epoch {self.epochs_run}")
+            # reference can be retrieved in artifacts panel
+            # "VERSION" can be a version (ex: "v2") or an alias ("latest or "best")
+            checkpoint_reference = (
+                f"rileydrizzy/{PROJECT_NAME}/{MODEL_RUN_ID}:{VERSION}"
+            )
+            # download checkpoint locally (if not already cached)
+            run = wandb.init(project=PROJECT_NAME)
+            artifact = run.use_artifact(checkpoint_reference, type="model")
+            artifact_dir = artifact.download()
+            model_checkpoint = Path(artifact_dir) / "model.ckpt"
+            self.on_load_checkpoint(model_checkpoint)
 
-    def _save_snapshot(self, epoch, save_to_wandb=False):
-        """
-        Save a snapshot of the model.
+    def _get_preds_loss_accuracy(self, batch):
+        source, targets = batch
+        pred_outputs = self.model(source, targets)
+        loss = self.loss_criterion(pred_outputs, source)
+        # Levenshtein_dis = self.metric(oi)
+        return pred_outputs, loss
 
-        Parameters
-        ----------
-        epoch : int
-            The current epoch.
-        save_to_wandb : bool, optional
-            _description_, by default False
-        """
+    def training_step(self, batch, batch_idx):
+        preds, loss = self._get_preds_loss_accuracy(batch)
+        self.log("loss", loss)
+        return loss
 
-        snapshot = {
-            "MODEL_STATE": self.model.module.state_dict(),
-            "EPOCHS_RUN": epoch,
+    def validation_step(self, batch, batch_idx):
+        preds, val_loss = self._get_preds_loss_accuracy(batch)
+        self.log("val_loss", val_loss)
+        return preds
+
+    """
+    def on_train_epoch_end():
+        pass
+    """
+
+    def configure_optimizers(self):
+        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer)
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": {
+                "scheduler": lr_scheduler,
+                "monitor": "val_loss",
+                "frequency": 5,
+            },
         }
-        torch.save(snapshot, self.snapshot_path)
-        if save_to_wandb:
-            # TODO save on wandb
-            pass
-        logger.info(f"Epoch {epoch} | Training snapshot saved at {self.snapshot_path}")
 
-    def _run_batch(self, source, targets):
-        """
-        Run a training batch.
-
-        Parameters:
-            - source: _type_
-            - targets: _type_
-        """
-        self.optimizer.zero_grad()
-        # TODO source and targets
-
-        output = self.model(source)
-        loss = self.loss_func(output, targets)
-        loss.backward()
-        self.optimizer.step()
-
-    def _run_epoch(self, epoch):
-        """
-        Run a training epoch.
-
-        Parameters:
-            - epoch (int): The current epoch.
-        """
-        batch_size = len(next(iter(self.train_data))[0])
-        logger.info(
-            f"[GPU{self.gpu_device}] Epoch {epoch} | Batchsize: \
-                {batch_size} | Steps: {len(self.train_data)}"
+    def configure_callbacks(self):
+        early_stopping_callback = EarlyStopping(
+            monitor="val_loss", check_on_train_epoch_end=False, patience=3
         )
-        # self.train_data.sampler.set_epoch(epoch)
-        for source, targets in self.train_data:
-            source = source.to(self.gpu_device)
-            targets = targets.to(self.gpu_device)
-            self._run_batch(source, targets)
 
-    def train(
-        self,
-        max_epochs: int,
-        save_every,
-        wandb_monitor=False,
-    ):
-        """
-        Train the model for a specified number of epochs.
+        checkpoint_callback = ModelCheckpoint(
+            dirpath=self.checkpoint_dir,
+            filename=FILENAME_TEMPLATE,
+            monitor="val_loss",
+            mode="min",
+            save_top_k=3,
+            every_n_epochs=5,
+            save_on_train_epoch_end=False,
+        )
+        device_callback = DeviceStatsMonitor(cpu_stats=True)
 
-        Parameters
-        ----------
-        max_epochs : int
-             The maximum number of epochs to train.
-        save_every : int
-            Save a snapshot of the model every `save_every` epochs.
-        wandb_monitor : bool, optional
-            _description_, by default False
-        """
+        callbacks_list = [checkpoint_callback, early_stopping_callback, device_callback]
+        return callbacks_list
 
-        if wandb_monitor:
-            wandb.init(project="NSL_2_AUDIO")
-            wandb.watch(self.model)
-        for epoch in range(self.epochs_run, max_epochs):
-            self._run_epoch(epoch)
-            if epoch % save_every == 0:
-                self._save_snapshot(epoch, save_to_wandb=wandb_monitor)
+
+trainer = L.Trainer(
+    accelerator="auto",
+    precision="16-mixed",
+    logger=wandb_logger,
+    profiler=profiler,
+    strategy="auto",
+    check_val_every_n_epoch=5,
+    max_time=MAX_TRAIN_TIME,
+    max_epochs=10,
+)
