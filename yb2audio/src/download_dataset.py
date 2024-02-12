@@ -20,12 +20,13 @@ import os
 import opendatasets as opd
 from utils.logging import logger
 
-URL_ = "https://www.kaggle.com/datasets/rileydrizzy/iroyinspeech"
+DATASET_URL = "https://www.kaggle.com/datasets/rileydrizzy/iroyinspeech"
 DATA_DIR = "data/raw"
 
 
 def download_dataset_(url, destination_dir):
-    """download the dataset from kaggle using it api
+    """
+    download the dataset from kaggle using it api
 
     Parameters
     ----------
@@ -46,7 +47,7 @@ def main():
     """
     logger.info(f"Commencing downloading the dataset into {DATA_DIR}")
     try:
-        download_dataset_(url=URL_, destination_dir=DATA_DIR)
+        download_dataset_(url=DATASET_URL, destination_dir=DATA_DIR)
         logger.success(f"Dataset downloaded to {DATA_DIR} successfully.")
     except Exception as error:
         logger.exception(f"Dataset download failed due to: {error}")
