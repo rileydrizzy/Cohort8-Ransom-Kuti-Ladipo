@@ -20,11 +20,10 @@ Functions:
 
 Constants:
 - DATA_DIR: Default directory for storing downloaded data.
-- data_files: List of files to download from the Kaggle competition.
+- DATA_FILES: List of files to download from the Kaggle competition.
 - train_landmarks: List of additional files related to landmarks for training data.
 - TRAIN_LANDMARKS_DIR: Directory for storing downloaded landmark files.
-
-COMMAND: Kaggle API command template used for downloading files.
+- COMMAND: Kaggle API command template used for downloading files.
 
 Custom Exception:
 - StorageFullError: Raised when the available storage space is insufficient.
@@ -32,6 +31,10 @@ Custom Exception:
 Usage:
 - Ensure the Kaggle API is configured.
 - Execute the script to download the specified dataset files.
+
+Example:
+    $ python src/download_dev_data.py
+
 """
 
 
@@ -42,7 +45,7 @@ import zipfile
 from utils.logging import logger
 
 DATA_DIR = "kaggle/input/asl-fingerspelling/"
-data_files = ["train.csv", "character_to_prediction_index.json"]
+DATA_FILES = ["train.csv", "character_to_prediction_index.json"]
 train_landmarks = ["1019715464.parquet", "1021040628.parquet", "105143404.parquet"]
 TRAIN_LANDMARKS_DIR = "train_landmarks/"
 
@@ -93,27 +96,27 @@ def check_storage(project_dir=os.getcwd()):
     return free_size_gb
 
 
-def download_file(cmd, unzipped_file_path, data_dir):
+def download_file(cmd, zipped_file_path, data_dir):
     """Download file using Kaggle API.
 
     Parameters
     ----------
     cmd : list
         Kaggle API Commands.
-    unzipped_file_path : str, Path
+    zipped_file_path : str, Path
         Path of the unzipped file.
     data_dir : str, Path
         The directory where the data should be downloaded into.
     """
     subprocess.run(cmd, check=True, text=True)
     if (
-        os.path.exists(unzipped_file_path)
-        and os.path.splitext(unzipped_file_path)[1].lower() == ".zip"
+        os.path.exists(zipped_file_path)
+        and os.path.splitext(zipped_file_path)[1].lower() == ".zip"
     ):
         # Unzipping and delete the zipped file to free storage
-        with zipfile.ZipFile(unzipped_file_path, "r") as zip_ref:
+        with zipfile.ZipFile(zipped_file_path, "r") as zip_ref:
             zip_ref.extractall(data_dir)
-        os.remove(unzipped_file_path)
+        os.remove(zipped_file_path)
 
 
 def main():
@@ -132,16 +135,16 @@ def main():
         logger.info(f"Current Available space {check_storage()}GB")
 
         # Downloading the metadata files
-        for file in data_files:
+        for file in DATA_FILES:
             logger.info(f"Downloading {file} in {DATA_DIR}")
 
             # Swtiching "FILE_NAME" in cmd list with the actual file name in kaggle
             COMMAND[6] = file
-            unzipfile_path = DATA_DIR + file + ".zip"
-            download_file(COMMAND, unzipfile_path, DATA_DIR)
+            zip_file_path = DATA_DIR + file + ".zip"
+            download_file(COMMAND, zip_file_path, DATA_DIR)
             logger.info(f"{file} downloaded successfully")
 
-        # Swtiching the directotry to download the landmarks into
+        # Swtiching the directory to download the landmarks into
         COMMAND[8] = DATA_DIR + TRAIN_LANDMARKS_DIR
 
         # Downloading the LANDMARKS files
@@ -151,8 +154,8 @@ def main():
 
             # Swtiching "FILE_NAME" in cmd list with the actual file name in kaggle
             COMMAND[6] = file_path
-            unzipfile_path = DATA_DIR + file_path + ".zip"
-            download_file(COMMAND, unzipfile_path, DATA_DIR + TRAIN_LANDMARKS_DIR)
+            zip_file_path = DATA_DIR + file_path + ".zip"
+            download_file(COMMAND, zip_file_path, DATA_DIR + TRAIN_LANDMARKS_DIR)
             logger.info(f"{parquet_file} downloaded successfully")
 
         logger.success("All files downloaded successfully")
