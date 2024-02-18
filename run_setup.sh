@@ -1,9 +1,5 @@
-#
-echo "Installing..."
-curl -sSL https://install.python-poetry.org | python -
-echo "Activating virtual environment"
-poetry install
-echo "Environment setup complete"
+#!/bin/bash
 
-echo "Setting Environment Keys and Variables"
-. set_environment_variables.sh
+curl -sSL https://install.python-poetry.org | python3 -
+poetry install --no-root
+echo "Environment setup complete"
