@@ -7,3 +7,5 @@ export KAGGLE_KEY=xxxxxxxxxxxxxx
 
 #replace with WANDB key
 export WANDB_API_KEY=xxxxxxxxxxxxxx
+
+echo "Setting Enviroment Variables Completed"
