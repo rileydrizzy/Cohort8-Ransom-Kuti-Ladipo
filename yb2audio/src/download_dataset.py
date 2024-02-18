@@ -1,44 +1,48 @@
 """Dataset Download Module
 
-This module provides functions to download datasets the IroyinSpeech dataset.
+This module provides functions to download datasets from the IroyinSpeech dataset.
 
 Functions:
-- download_dataset(url: str, destination: str):
-  Downloads a dataset from the given URL to the specified destination directory.
-- main - the main function to run the script
+- download_dataset(cmd: list):
+    Downloads a dataset from Kaggle to the specified destination directory which is DATA_DIR.
+
+- main():
+    The main function to execute the dataset download script.
 
 Usage:
-    To download the dataset, run the script directly.
+    To download the dataset, run the script directly using Python.
 
 Example:
     $ python src/download_dataset.py
-
 """
 
-import os
-
-import opendatasets as opd
+import subprocess
 from utils.logging import logger
 
-DATASET_URL = "https://www.kaggle.com/datasets/rileydrizzy/iroyinspeech"
+DATASET = "rileydrizzy/iroyinspeech"
 DATA_DIR = "data/raw"
 
+COMMAND = [
+    "kaggle",
+    "datasets",
+    "download",
+    f"{DATASET}",
+    "-p",
+    f"{DATA_DIR}",
+    "--unzip",
+]
 
-def download_dataset_(url, destination_dir):
+
+def download_dataset(cmd):
     """
-    download the dataset from kaggle using it api
+    Download the dataset from kaggle using it API.
 
     Parameters
     ----------
-    url : str
-        dataset kaggle url
-    destination_dir : str, path
-        directory to download the dataset into
+    cmd : list
+        Kaggle API Commands.
     """
-
-    if not os.path.isdir(destination_dir):
-        os.makedirs(destination_dir)
-    opd.download_kaggle_dataset(url, destination_dir)
+    subprocess.run(cmd, check=True, text=True)
 
 
 def main():
@@ -47,7 +51,7 @@ def main():
     """
     logger.info(f"Commencing downloading the dataset into {DATA_DIR}")
     try:
-        download_dataset_(url=DATASET_URL, destination_dir=DATA_DIR)
+        download_dataset(cmd=COMMAND)
         logger.success(f"Dataset downloaded to {DATA_DIR} successfully.")
     except Exception as error:
         logger.exception(f"Dataset download failed due to: {error}")
