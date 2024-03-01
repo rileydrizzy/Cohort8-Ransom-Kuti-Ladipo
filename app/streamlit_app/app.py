@@ -19,11 +19,6 @@ Dependencies:
 Example:
     $ python -m streamlit run app.py
 
-For more information, visit the project repository at <insert repository link>.
-
-Author: [Your Name]
-Date: [Date]
-
 """
 
 import time
