@@ -1,20 +1,18 @@
 # 
-FROM python
+FROM python:3.11
 
-LABEL maintainer="Ladipo Ipadeola" maintainer_email="ipadeolaoladipo@outlook.com"
+LABEL maintainer="Ladipo Ipadeola" \
+      maintainer_email="ipadeolaoladipo@outlook.com"
 
-ENV key=value
+ENV APPROOT="/app" \
+    VERSION="0.1"
 
-WORKDIR /the/workdir/path
+WORKDIR ${APPROOT}
 
-ADD source dest
+ADD . ${APPROOT}
 
-COPY source dest
+COPY streamlit_app/ /app
 
-EXPOSE port
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN command
-
-CMD [ "executable" ]
-
-ENTRYPOINT [ "python"," -m streamlit",  "run" ,"app.py"] 
+ENTRYPOINT ["python", "-m", "streamlit", "run", "app.py"]
