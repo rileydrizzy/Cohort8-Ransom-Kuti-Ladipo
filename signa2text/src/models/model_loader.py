@@ -10,22 +10,18 @@ Methods:
 - get_model(model_name): Builds and retrieves a specific model instance.
 
 """
+
 import torch
 from models.baseline_transformer import ASLTransformer
-
-# TODO remove test model
-def test_model():
-    model = torch.nn.Sequential(
-        [torch.nn.Linear(20, 100), torch.nn.Linear(100, 10), torch.nn.Linear(10, 5)]
-    )
-    return model
 
 
 class ModelLoader:
     """Model Loader"""
 
     def __init__(self):
-        self.models = {"asl_transformer": ASLTransformer(), "test_model": test_model()}
+        self.models = {
+            "asl_baseline_transformer": ASLTransformer(),
+        }
 
     def get_model(self, model_name):
         """Build and retrieve the model instance.

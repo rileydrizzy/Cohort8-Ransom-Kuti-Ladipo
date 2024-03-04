@@ -16,10 +16,8 @@ Functions:
 
 - get_dataset(file_path): Creates a dataset with a token-to-index mapping.
 
-- prepare_dataloader(dataset, batch_size, num_workers_= 1): Prepares a dataloader with\
-    distributed sampling.
+- prepare_dataloader(dataset, batch_size, num_workers_= 1): Prepares a dataloader
 """
-
 
 import json
 import pandas as pd
@@ -27,13 +25,12 @@ import pyarrow.parquet as pq
 import torch
 from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
-from torch.utils.data.distributed import DistributedSampler
 from dataset.frames_config import FEATURE_COLUMNS
 from dataset.preprocess import preprocess_frames
 
 # File paths for metadata and phrase-to-index mapping
-PHRASE_PATH = "/kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
-METADATA = "/kaggle/input/asl-fingerspelling/train.csv"
+PHRASE_PATH = "kaggle/input/asl-fingerspelling/character_to_prediction_index.json"
+METADATA = "kaggle/input/asl-fingerspelling/train.csv"
 
 # Load phrase-to-index mapping
 with open(PHRASE_PATH, "r", encoding="utf-8") as f:
@@ -271,9 +268,9 @@ def get_dataset(file_path):
     return dataset
 
 
-def prepare_dataloader(dataset, batch_size, num_workers_=1):
+def prepare_dataloader(dataset, batch_size, num_workers_=0):
     """
-    Prepare a DataLoader with distributed sampling.
+    Prepare a DataLoader
 
     Parameters
     ----------
@@ -284,7 +281,7 @@ def prepare_dataloader(dataset, batch_size, num_workers_=1):
         Number of samples per batch.
 
     num_workers_ : int, optional
-        Number of workers for data loading, by default 1.
+        Number of workers for data loading, by default 0.
 
     Returns
     -------
@@ -292,43 +289,11 @@ def prepare_dataloader(dataset, batch_size, num_workers_=1):
         A DataLoader instance for the specified dataset.
 
     Notes
-    Utilize distributed sampling for better training efficiency.
+
     """
     return DataLoader(
         dataset,
         batch_size=batch_size,
         pin_memory=True,
         num_workers=num_workers_,
-        sampler=DistributedSampler(dataset),
     )
-
-
-#! A dataset class for debugging the train pipeline
-class TestDataset(Dataset):
-    def __init__(self, size):
-        self.size = size
-        self.data = [(torch.rand(20), torch.rand(1)) for _ in range(size)]
-
-    def __len__(self):
-        return self.size
-
-    def __getitem__(self, index):
-        return self.data[index]
-
-
-#! Function to get a test dataset for debugging train pipeline
-def get_test_dataset():
-    """_summary_
-
-    Parameters
-    ----------
-    pass_ : _type_
-        _description_
-
-    Returns
-    -------
-    _type_
-        _description_
-    """
-    dataset = TestDataset
-    return dataset

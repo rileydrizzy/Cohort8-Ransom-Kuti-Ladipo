@@ -5,7 +5,7 @@ import pytest
 
 import torch
 from torch.utils.data import DataLoader
-from src.models.baseline_transformer import ASLTransformer
+from models.baseline_transformer import ASLTransformer
 
 
 @pytest.fixture

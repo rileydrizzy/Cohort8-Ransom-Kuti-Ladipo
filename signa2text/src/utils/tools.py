@@ -15,11 +15,10 @@ Functions:
 import os
 import random
 import argparse
+from pathlib import Path
 
 import numpy as np
 import torch
-
-# import torch_xla.core.xla_model as xm
 
 
 def set_seed(seed: int = 42) -> None:
@@ -41,32 +40,44 @@ def set_seed(seed: int = 42) -> None:
     os.environ["PYTHONHASHSEED"] = str(seed)
 
 
-def get_device_strategy(tpu: bool = False) -> torch.device:
-    """Returns the device strategy based on CPU/GPU/TPU availability.
+def resume_training(wandb_logger, model_run_id, project_name, version="latest"):
+    """_summary_
 
     Parameters
     ----------
-    tpu : bool, optional
-        Flag indicating whether to train on TPU, by default False.
+    wandb_logger : _type_
+        _description_
+    model_run_id : _type_
+        _description_
+    project_name : _type_
+        _description_
+    version : str, optional
+        _description_, by default "latest"
 
     Returns
     -------
-    torch.device
-        Device (CPU or GPU) for training.
+    _type_
+        _description_
     """
-    if tpu:
-        device = None  # xm.xla_device()
-    else:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    return device
+
+    checkpoint_reference = f"rileydrizzy/{project_name}/{model_run_id}:{version}"
+
+    # download checkpoint locally (if not already cached)
+    artifact_dir = wandb_logger.download_artifact(
+        checkpoint_reference, artifact_type="model"
+    )
+    model_resume_checkpoint = Path(artifact_dir) / "model.ckpt"
+    return model_resume_checkpoint
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args():
     """
     Parse arguments given to the script.
 
-    Returns:
-        argparse.Namespace: Parsed argument object.
+    Returns
+    -------
+    argparse.Namespace
+        Parsed argument object.
     """
     parser = argparse.ArgumentParser(
         description="Run distributed data-parallel training and log with wandb."
