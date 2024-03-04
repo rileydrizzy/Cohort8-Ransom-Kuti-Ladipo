@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+
+  streamlit_app:
+    container_name: streamlit_container
+    build:
+     context: .
+     dockerfile: Dockerfile
+    
+    networks:
+    - my_bridge_network
+  model_service:
+   container_name: NSL_model
+   build:
+    context: .
+    dockerfile: Dockerfile.df
+    
+networks:
+  my_bridge_network:
+    driver: bridge
