@@ -33,7 +33,7 @@ RESULT_PAGE = PAGES_DIR + "result_page.py"
 PROJECT_LOGO = "assets/images/logos/logo.png"
 NSL_SIGN_GIF = "assets/sign_lang.gif"
 LOADING_ANIMATION = "assets/lotties/Animation_1708486960708.json"
-PROCESSING_ANIMATION = "assets/lotties/"
+PROCESSING_ANIMATION = "assets/lotties/Animation_1708486960708.json"
 
 # Slideshow images
 SLIDES_IMAGES = [
