@@ -124,3 +124,4 @@ set_environment_variables.sh
 #miscellaneous
 .gitpod.yml
 poetry.lock
+docker-compose.yaml
