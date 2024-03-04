@@ -136,13 +136,13 @@ st.markdown(
 
 # Display bullet points for data collection and training
 st.markdown(
-    f"**1. Leveraging Existing Resources:** "
-    f"We begin by harnessing the power of existing, publicly available datasets, "
+    "**1. Leveraging Existing Resources:** "
+    "We begin by harnessing the power of existing, publicly available datasets, "
     f"such as the [Google American Sign Language]({GOOGLE_ASL_URL})(ASL) and How2Sign datasets. "
-    f"While these datasets focus on American Sign Language (ASL), they serve as a valuable "
-    f"foundation due to the close linguistic relationship between ASL and NSL. Additionally, "
+    "While these datasets focus on American Sign Language (ASL), they serve as a valuable "
+    "foundation due to the close linguistic relationship between ASL and NSL. Additionally, "
     f"we incorporate the [**IròyìnSpeech**]({IROYIN_SPEECH_URL}) dataset, a rich collection of spoken Yoruba speech, "
-    f"to enhance the naturalness of the final translation output.",
+    "to enhance the naturalness of the final translation output.",
     unsafe_allow_html=True,
 )
 
