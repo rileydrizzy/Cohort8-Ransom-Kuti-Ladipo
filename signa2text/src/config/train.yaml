@@ -1,9 +1,14 @@
-args:
-  model_name: "baseline_transformer"
+model_name: "asl_baseline_transformer"
+
+params:
   save_every: 2
-  epochs: 2
-  batch: 64
-  tpu: False
+  total_epochs: 2
+  batch_size: 128
+  valid_epoch: 2
+
+wandb_params:
   resume_checkpoint: False
-  dev_mode: True
-  wandb_: False
+  model_run_id: "None"
+  model_version: "latest"
+
+dev_mode: True
