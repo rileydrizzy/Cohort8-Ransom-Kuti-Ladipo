@@ -101,7 +101,6 @@ st.write(
 st.divider()
 
 # Introduction section
-st.subheader("intro")
 st.markdown("**<u> INTRODUCTION </u>**", unsafe_allow_html=True)
 st.markdown(
     "<div style='text-align: justify;'><p style='text-indent: 2em;'>"
