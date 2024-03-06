@@ -14,8 +14,7 @@ import time
 import streamlit as st
 from streamlit_lottie import st_lottie
 from components.configs import PROJECT_LOGO, PROCESSING_ANIMATION
-
-# from components.utils import load_lottiefile, extract_landmarks_features
+from components.utils import load_lottiefile, extract_landmarks_features
 
 # Set page configuration
 st.set_page_config(page_title="Upload", page_icon="🧏", initial_sidebar_state="auto")
@@ -73,14 +72,14 @@ sign_lang_video = st.file_uploader(
     label="Choose File", type=["MP4", "AVI", "MKV", "PNG"], on_change=None
 )
 
-# processing_animation_ = load_lottiefile(PROCESSING_ANIMATION)
+processing_animation_ = load_lottiefile(PROCESSING_ANIMATION)
 
 if sign_lang_video is not None:
     st.video(sign_lang_video)
     st.success("Your file has been uploaded successfully!")
     st.write("Click the button to perform translation.")
     if st.button(label="Start Translation"):
-        # st_lottie(processing_animation_)
+        st_lottie(processing_animation_)
         # TODO Extract feature landmarks
         # data = extract_landmarks_features(sign_lang_video)
 
