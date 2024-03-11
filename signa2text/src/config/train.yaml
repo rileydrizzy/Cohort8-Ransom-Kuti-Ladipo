@@ -1,0 +1,14 @@
+model_name: "asl_baseline_transformer"
+
+params:
+  save_every: 2
+  total_epochs: 2
+  batch_size: 128
+  valid_epoch: 2
+
+wandb_params:
+  resume_checkpoint: False
+  model_run_id: "None"
+  model_version: "latest"
+
+dev_mode: True

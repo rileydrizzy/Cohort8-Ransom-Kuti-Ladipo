@@ -13,6 +13,7 @@ Classes:
 Methods:
 - Transformer.generate: Perform inference on a new sequence
 """
+
 import torch
 from torch import nn
 
@@ -25,11 +26,11 @@ class TokenEmbedding(nn.Module):
         Parameters
         ----------
         num_vocab : int
-            number of character vocabulary
+            number of character vocabulary.
         maxlen : int
-            maximum length of sequence
+            maximum length of sequence.
         embedding_dim : int
-            embedding output dimension
+            embedding output dimension.
         """
         super().__init__()
         self.token_embed_layer = nn.Embedding(num_vocab, embedding_dim)
@@ -70,13 +71,13 @@ class LandmarkEmbedding(nn.Module):
         padding = (11 - 1) // 2
 
         # Define three 1D convolutional layers with ReLU activation and stride 2
-        self.conv1 = nn.Conv1d(
-            in_channels=1, out_channels=64, kernel_size=11, stride=2, padding=padding
+        self.conv1_layer = nn.Conv1d(
+            in_channels=128, out_channels=64, kernel_size=11, stride=2, padding=padding
         )
-        self.conv2 = nn.Conv1d(
+        self.conv2_layer = nn.Conv1d(
             in_channels=64, out_channels=128, kernel_size=11, stride=2, padding=padding
         )
-        self.conv3 = nn.Conv1d(
+        self.conv3_layer = nn.Conv1d(
             in_channels=128, out_channels=256, kernel_size=11, stride=2, padding=padding
         )
 
@@ -85,12 +86,12 @@ class LandmarkEmbedding(nn.Module):
 
     def forward(self, x):
         # Input x should have shape (batch_size, input_size, input_dim)
-        x = x.unsqueeze(1)  # Add a channel dimension for 1D convolution
+        # x = x.unsqueeze(1)  # Add a channel dimension for 1D convolution
 
         # Apply convolutional layers with ReLU activation and stride 2
-        x = torch.relu(self.conv1(x))
-        x = torch.relu(self.conv2(x))
-        x = torch.relu(self.conv3(x))
+        x = torch.relu(self.conv1_layer(x))
+        x = torch.relu(self.conv2_layer(x))
+        x = torch.relu(self.conv3_layer(x))
 
         # Global average pooling to reduce spatial dimensions
         x = torch.mean(x, dim=2)

@@ -10,7 +10,6 @@ Functions:
 """
 
 import pytest
-
 import torch
 from dataset.frames_config import FRAME_LEN
 from dataset.preprocess import preprocess_frames
@@ -64,7 +63,7 @@ def test_token_hash_table():
         45,
     ]
     sample_sentence_tokens = torch.tensor(sample_sentence_tokens, dtype=torch.long)
-    tokenize_result = token_lookup_table.sentence_to_tensor(sample_sentence)
+    tokenize_result = token_lookup_table.tensor_from_sentence(sample_sentence)
 
     # Assert the length of tokenize text
     assert sample_sentence_len == len(
@@ -76,7 +75,7 @@ def test_token_hash_table():
         for idx1, idx2 in zip(sample_sentence_tokens, tokenize_result)
     )
     # Assert tokens match the expected value
-    assert is_same == True, "Tokens do not match the expected value"
+    assert is_same is True, "Tokens do not match the expected value"
 
     # Assert that clean_frames is a PyTorch tensor
     assert torch.is_tensor(tokenize_result), "Tokens are not PyTorch tensor"

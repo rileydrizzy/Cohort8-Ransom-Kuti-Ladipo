@@ -92,8 +92,11 @@ target/
 
 # Data and models
 data/*/*
-models/*
-kaggle
+artifacts/
+signa2text/kaggle/input/asl-fingerspelling/*
+!signa2text/kaggle/input/asl-fingerspelling/character_to_prediction_index.json
+wandb/
+outputs/
 !.gitkeep
 !dataset_paths.json
 !dev_samples.json
