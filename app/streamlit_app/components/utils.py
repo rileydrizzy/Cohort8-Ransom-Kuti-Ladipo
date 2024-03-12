@@ -4,7 +4,9 @@ This module provides utility functions for the NSL-2-AUDIO  web application.
 Functions:
 - `load_lottiefile(filepath: str) -> dict`: Loads a Lottie animation file (.json) \
     and returns its parsed contents as a dictionary.
-- extract_landmarks_features()
+- `extract_landmarks_features(video_file, startframe)`: Extracts landmarks features \
+    from the uploaded NSL video file.
+
 
 Dependencies:
 - cv2
@@ -17,11 +19,10 @@ Import this module and use the provided functions as needed.
 
 """
 
-#import cv2
 import json
-#import numpy as np
-#import pandas as pd
-#import mediapipe as mp
+import cv2
+import pandas as pd
+import mediapipe as mp
 
 
 def load_lottiefile(filepath: str) -> dict:
@@ -53,7 +54,7 @@ def load_lottiefile(filepath: str) -> dict:
 
 
 # TODO Debug
-""""def extract_landmarks_features(cap, start_frame=0):
+def extract_landmarks_features(cap, start_frame=0):
 
     if not isinstance(cap, cv2.VideoCapture):
         raise ValueError
@@ -180,4 +181,3 @@ def load_lottiefile(filepath: str) -> dict:
     return pd.DataFrame(
         {"frame": frame, "type": type_, "landmark_index": index, "x": x, "y": y, "z": z}
     )
-"""
