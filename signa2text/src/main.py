@@ -16,8 +16,8 @@ from models.model_loader import ModelLoader
 from dataset.dataset_loader import get_dataset, prepare_dataloader  # get_test_dataset
 from dataset.dataset_paths import get_dataset_paths
 from lightning import Trainer
-from trainer import LitModule, PROJECT_NAME, profiler
-
+from trainer import LitModule, profiler
+from config import PROJECT_NAME
 from lightning.pytorch.loggers import WandbLogger
 
 
