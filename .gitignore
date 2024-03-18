@@ -117,8 +117,6 @@ yb2audio/data/*/*
 #yb2audio/development
 
 # Development Enviroment
-dev.py
-dev_env.txt
 **/development/
 
 # Keys
