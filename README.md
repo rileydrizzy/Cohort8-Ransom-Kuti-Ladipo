@@ -34,6 +34,10 @@
 > [!IMPORTANT]  
 > This project is currently in a very early development/experimental stage. There are a lot of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress!
 
+> [!IMPORTANT]  
+> This project is currently in a very early development/experimental stage. There are a lot of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress!
+
+
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
@@ -53,7 +57,7 @@
 - [Acknowledgments](#acknowledgments)
 
 <!-- ABOUT THE PROJECT -->
-## About
+## About The Project
 
 ***Overview:*** \
 This project is dedicated to the development of an Automatic Sign Language Translation system, with a specific focus on translating Nigerian Sign Language (NSL) into one of the Low-Resource Languages (LRLs) spoken in Nigeria. The primary objective is to address the communication challenges faced by the NSL community and contribute to inclusivity and employment opportunities in education and the workforce.
