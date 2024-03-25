@@ -12,7 +12,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src=".assets/logo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">NSL-2-AUDIO</h3>
@@ -31,33 +31,28 @@
   </p>
 </div>
 
+> [!IMPORTANT]  
+> This project is currently in a very early development/experimental stage. There are a lot of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress!
+
+
 <!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+## Table of Contents
+
+- [About](#about)
+- [Demos](#demos)
+- [System Architecture](#system-architecture)
+- [Getting Started](#getting-started)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Under The Hood](#under-the-hood)
+  - [AI Planning and Reasoning](#ai-planning-and-reasoning)
+  - [Keyword Extraction](#keyword-extraction)
+- [Contributing](#contributing)
+- [License](#license)
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About
 
 ***Overview:*** \
 This project is dedicated to the development of an Automatic Sign Language Translation system, with a specific focus on translating Nigerian Sign Language (NSL) into one of the Low-Resource Languages (LRLs) spoken in Nigeria. The primary objective is to address the communication challenges faced by the NSL community and contribute to inclusivity and employment opportunities in education and the workforce.
@@ -79,17 +74,35 @@ Effective communication is a cornerstone of societal cohesion, and this project 
 
 You can read the project proposal here, [Project Proposal](https://github.com/AISaturdaysLagos/Cohort8-Ransome-Kuti-Ladipo/blob/main/project-proposal.pdf)
 
-[![DEMO][product-screenshot]](https://example.com)
-![sign_lang_gif](images/sign_lang.gif)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ### Built With
 
 - [![Python][Python]][Python-url]
 - [![Pytorch][Pytorch]][Pytorch-url]
+- [![GCP][GCP]][GCP-URL]
+- [![MEAT][META]][META-url]
 - [![HuggingFace][HuggingFace]][HuggingFace-url]
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+> [!NOTE]
+> Currently support only Yoruba
+
+## Demos
+
+- Note this is a Temporary demo
+
+![web_demo](.assets\ASL_gif.mp4)
+
+## System Architecture
+
+<!--[high_level_system_design](images) -->
+### High Level System Design
+
+![k](.assets/high_level_design.gif)
+
+### System Design and Architecture
+
+![system_design]()
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -100,57 +113,27 @@ The project is structured into three distinct parts, each housed in separate dir
 
 The `signa2text` directory is dedicated to the process of translating sign language into English text. Meanwhile, the `linguify_yb` directory serves the purpose of transforming English text into Yoruba text. Finally, the `yb2audio` directory is designated for utilizing the translated audio to generate Yoruba audio.
 
-To access any of the three directories, adhere to the specified prerequisites below and navigate into the respective directory.
+In `app` directory
 
-### Prerequisites
-
-```bash
-# Clone this repository
-$ git clone https://github.com/rileydrizzy/NSL_2_AUDIO
-
-# Go into the repository
-$ cd NSL_2_AUDIO
-
-# Install dependencies
-$ make setup
-```
+To access any of the directories, navigate into the respective directory and adhere to the specified prerequisites in the respective directory README.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- USAGE EXAMPLES -->
-## Usage
+## Quick Start
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] Feature 1
-
-See the [open issues](https://github.com/rileydrizzy/NSL_2_AUDIO/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+The easiest way to run the project locally:
 
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+We welcome contributions to enhance NSL-2-AUDIO capabilities and improve its performance. To contribute, please see the `CONTRIBUTING.md` file for steps.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+NSL-2-AUDIO is released under the [MIT License](https://opensource.org/licenses/MIT). See the `LICENSE` file for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -196,7 +179,9 @@ I would like to acknowledge the outstanding contributions of :
 [Python]: <https://img.shields.io/badge/Python-563D7C?style=for-the-badge&logo=python&logoColor=white>
 [Pytorch-url]: <https://pytorch.org/>
 [Pytorch]: <https://img.shields.io/badge/PyTorch-0769AD?style=for-the-badge&logo=pytorch&logoColor=white>
+[GCP-url]: <https://cloud.google.com/>
+[GCP]: <https://img.shields.io/badge/Google-0769AD?style=for-the-badge&logo=googlecloud&logoColor=white>
 [HuggingFace-url]: <https://huggingface.co/>
-[HuggingFace]: <https://img.shields.io/badge/HuggingFace-DD0031?style=for-the-badge&logo=huggingface&logoColor=white>
-[GCP-url]: <https://cloud.google.com/?hl=en>
-[GCP]: <>
+[HuggingFace]: <https://img.shields.io/badge/HuggingFace-DD0031?style=for-the-badge&logo=Huggingface&logoColor=white>
+[META-url]: <https://ai.meta.com/>
+[META]: <https://img.shields.io/badge/meta-563D7C?style=for-the-badge&logo=meta&logoColor=white>
