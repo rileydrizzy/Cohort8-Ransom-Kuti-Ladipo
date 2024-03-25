@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Display a header with script information
 echo "=== Running Train Script ==="
