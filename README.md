@@ -34,30 +34,22 @@
 > [!IMPORTANT]  
 > This project is currently in a very early development/experimental stage. There are a lot of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress!
 
-> [!IMPORTANT]  
-> This project is currently in a very early development/experimental stage. There are a lot of unimplemented/broken features at the moment. Contributions are welcome to help out with the progress!
-
-
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
 - [About](#about)
 - [Demos](#demos)
 - [System Architecture](#system-architecture)
-- [Getting Started](#getting-started)
 - [Quick Start](#quick-start)
-- [Installation](#installation)
-- [Under The Hood](#under-the-hood)
-  - [AI Planning and Reasoning](#ai-planning-and-reasoning)
-  - [Keyword Extraction](#keyword-extraction)
+- [Getting Started](#getting-started)
+- [Roadmap](#bulb-roadmap)
 - [Contributing](#contributing)
 - [License](#license)
-- [Roadmap](#roadmap)
 - [Contact](#contact)
 - [Acknowledgments](#acknowledgments)
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About
 
 ***Overview:*** \
 This project is dedicated to the development of an Automatic Sign Language Translation system, with a specific focus on translating Nigerian Sign Language (NSL) into one of the Low-Resource Languages (LRLs) spoken in Nigeria. The primary objective is to address the communication challenges faced by the NSL community and contribute to inclusivity and employment opportunities in education and the workforce.
@@ -94,22 +86,26 @@ You can read the project proposal here, [Project Proposal](https://github.com/AI
 
 ## Demos
 
-- Note this is a Temporary demo
+> This is a Temporary demo
 
-![web_demo](.assets\ASL_gif.mp4)
+[![Video Title](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
 
 ## System Architecture
 
 <!--[high_level_system_design](images) -->
-### High Level System Design
+### Architecture of Inference Pipeline
 
-![k](.assets/high_level_design.gif)
+![inference_pipeline.gif](.assets/inference_pipeline.gif.gif)
 
-### System Design and Architecture
+### System Design
 
-![system_design]()
+![system_design](.assets\system_design)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Quick Start
+
+The easiest way to run the project locally:
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -124,25 +120,18 @@ To access any of the directories, navigate into the respective directory and adh
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Quick Start
+## Results
 
-The easiest way to run the project locally:
+## :bulb: Roadmap
 
-<!-- CONTRIBUTING -->
 ## Contributing
 
 We welcome contributions to enhance NSL-2-AUDIO capabilities and improve its performance. To contribute, please see the `CONTRIBUTING.md` file for steps.
 
-<!-- LICENSE -->
 ## License
 
 NSL-2-AUDIO is released under the [MIT License](https://opensource.org/licenses/MIT). See the `LICENSE` file for more information.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## :bulb: Roadmap
-
-<!-- CONTACT -->
 ## Contact
 
 If you have questions or need assistance, feel free to reach out to:
