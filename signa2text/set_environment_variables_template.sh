@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # replace placeholders and rename this file to `set_environment_variables.sh`
 
 #replace with Kaggle username and key
