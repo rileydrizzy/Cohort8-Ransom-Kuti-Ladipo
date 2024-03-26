@@ -9,8 +9,6 @@ Functions:
 
 import torch
 import lightning as L
-
-# from utils.logging import logger
 from lightning.pytorch.callbacks import (
     ModelCheckpoint,
     EarlyStopping,
@@ -18,9 +16,8 @@ from lightning.pytorch.callbacks import (
 )
 from lightning.pytorch.profilers import SimpleProfiler
 
+# from utils.logging import logger
 # from metrics import NormalizedLevenshteinDistance
-
-PROJECT_NAME = "NSL_2_AUDIO"
 
 # Checkpoint Filename Template
 FILENAME_TEMPLATE = "NSL-2-AUDIO-{epoch}-{val_loss:.2f}"
@@ -31,7 +28,9 @@ profiler = SimpleProfiler(dirpath=".", filename="perf_logs")
 class LitModule(L.LightningModule):
     """_summary_"""
 
-    def __init__(self, model, loss_criterion, metric, save_ckpt_every=5, model_name="test"):
+    def __init__(
+        self, model, loss_criterion, metric, save_ckpt_every=5, model_name="test"
+    ):
         super().__init__()
         self.model = model
         self.loss_criterion = loss_criterion

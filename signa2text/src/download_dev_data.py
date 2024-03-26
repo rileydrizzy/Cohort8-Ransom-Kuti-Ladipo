@@ -138,13 +138,13 @@ def main():
         for file in DATA_FILES:
             logger.info(f"Downloading {file} in {DATA_DIR}")
 
-            # Swtiching "FILE_NAME" in cmd list with the actual file name in kaggle
+            # Switching "FILE_NAME" in cmd list with the actual file name in kaggle
             COMMAND[6] = file
             zip_file_path = DATA_DIR + file + ".zip"
             download_file(COMMAND, zip_file_path, DATA_DIR)
             logger.info(f"{file} downloaded successfully")
 
-        # Swtiching the directory to download the landmarks into
+        # Switching the directory to download the landmarks into
         COMMAND[8] = DATA_DIR + TRAIN_LANDMARKS_DIR
 
         # Downloading the LANDMARKS files
@@ -152,7 +152,7 @@ def main():
             logger.info(f"Current Available space {check_storage()}GB")
             file_path = TRAIN_LANDMARKS_DIR + parquet_file
 
-            # Swtiching "FILE_NAME" in cmd list with the actual file name in kaggle
+            # Switching "FILE_NAME" in cmd list with the actual file name in kaggle
             COMMAND[6] = file_path
             zip_file_path = DATA_DIR + file_path + ".zip"
             download_file(COMMAND, zip_file_path, DATA_DIR + TRAIN_LANDMARKS_DIR)

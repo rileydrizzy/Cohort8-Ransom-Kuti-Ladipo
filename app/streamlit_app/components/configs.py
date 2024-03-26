@@ -32,8 +32,8 @@ UPLOAD_PAGE = PAGES_DIR + "upload_page.py"
 RESULT_PAGE = PAGES_DIR + "result_page.py"
 PROJECT_LOGO = "assets/images/logos/logo.png"
 NSL_SIGN_GIF = "assets/sign_lang.gif"
-LOADING_ANIMATION = "assets/lotties/Animation_1708486960708.json"
-PROCESSING_ANIMATION = "assets/lotties/Animation_1708486960708.json"
+LOADING_ANIMATION = "assets/lottie/Animation_1708486960708.json"
+PROCESSING_ANIMATION = "assets/lottie/Animation_1708486960708.json"
 
 # Slideshow images
 SLIDES_IMAGES = [
@@ -246,7 +246,7 @@ a:active {
 </style>
 <div class="footer">
     <p style="font-size: 13px">Copyright (c) 2024 Ladipo Ezekiel Ipadeola.</p>
-    <p style="font-size: 13px">This software is distributed under an M!T licence. Please consult the LICENSE file for more details.</p>
+    <p style="font-size: 13px">This software is distributed under an M!T license. Please consult the LICENSE file for more details.</p>
     <a href="https://github.com/rileydrizzy/NSL_2_AUDIO"><img class="image2" src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="github" width="70" height="70"></a>
 </div>
 """
