@@ -82,7 +82,8 @@ You can read the project proposal here, [Project Proposal](https://github.com/AI
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 > [!NOTE]
-> Currently support only Yoruba
+> Currently, our support is exclusively for the Yoruba language.\
+However, we aspire to expand our services to include other low-resource Nigerian languages such as Igbo and Hausa in the future.
 
 ## Demos
 
@@ -107,6 +108,18 @@ You can read the project proposal here, [Project Proposal](https://github.com/AI
 
 The easiest way to run the project locally:
 
+```bash
+# Clone this repository
+$ git clone https://github.com/rileydrizzy/NSL_2_AUDIO
+
+# Go into the repository
+$ cd NSL_2_AUDIO
+
+# Go to app directory
+$ cd app
+
+```
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -114,13 +127,11 @@ The project is structured into three distinct parts, each housed in separate dir
 
 The `signa2text` directory is dedicated to the process of translating sign language into English text. Meanwhile, the `linguify_yb` directory serves the purpose of transforming English text into Yoruba text. Finally, the `yb2audio` directory is designated for utilizing the translated audio to generate Yoruba audio.
 
-In `app` directory
+In the `app` directory, hold the logic for the application. This directory serves as the core repository for all the essential functionalities and trained models required for the smooth operation of the application. Here, you'll find the code responsible for handling user interactions, processing of video data, managing state, and performing inference.
 
-To access any of the directories, navigate into the respective directory and adhere to the specified prerequisites in the respective directory README.
+**To access any of the directories, navigate into the respective directory and adhere to the specified prerequisites in the respective directory README.**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Results
 
 ## :bulb: Roadmap
 
