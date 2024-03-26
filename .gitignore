@@ -117,9 +117,8 @@ yb2audio/data/*/*
 #yb2audio/development
 
 # Development Enviroment
-dev.py
-dev_env.txt
 **/development/
+dev.py
 
 # Keys
 set_environment_variables.sh
