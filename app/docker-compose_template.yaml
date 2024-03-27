@@ -7,15 +7,5 @@ services:
     build:
      context: .
      dockerfile: Dockerfile
-    
-    networks:
-    - my_bridge_network
-  model_service:
-   container_name: NSL_model
-   build:
-    context: .
-    dockerfile: Dockerfile.df
-    
-networks:
-  my_bridge_network:
-    driver: bridge
+    ports:
+    - "8080:8501"
