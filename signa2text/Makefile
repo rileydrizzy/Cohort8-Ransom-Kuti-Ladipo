@@ -4,13 +4,13 @@ help:
 	@echo "    setup                Set up the environment with the required dependencies and environment variables"
 	@echo "    freeze_reqs          Save the dependencies onto the requirements text file"
 	@echo "    precommit            Runs precommit on all files"
-	@echo "    download_data        Download "
-	@echo "    run_train            Training"
+	@echo "    download_data        Download necessary data for training "
+	@echo "    run_train            Execute the training process"
 	
 setup:
 	@echo "Installing and setting up dependencies..."
-	. ./run_setup.sh 
-
+	. ./run_setup.sh no-venv
+	
 	@echo "Setting Enviroment Variables"
 	. ./set_environment_variables.sh
 	
