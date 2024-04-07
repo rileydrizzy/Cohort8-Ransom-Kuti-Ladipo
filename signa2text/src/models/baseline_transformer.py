@@ -41,23 +41,25 @@ class TokenEmbedding(nn.Module):
         Parameters
         ----------
         x : tensors
-            input tensor with shape (batch_size, sequence_length)
+            input tensor with shape (batch_size, sequence_length, )
 
         Returns
         -------
         tensors
             embedded tensor with shape (batch_size, sequence_length, embedding_dim)
         """
-        batch_size, maxlen = x.size()
+        if len(x.size()) > 1:
+            max_len = x.size(1)
+        else:
+            max_len = x.size(0)
 
+        print(max_len)
         # Token embedding
         x = self.token_embed_layer(x)
 
         # Positional encoding
-        positions = torch.arange(0, maxlen).to(x.device)
-        positions = (
-            self.position_embed_layer(positions).unsqueeze(0).expand(batch_size, -1, -1)
-        )
+        positions = torch.arange(0, max_len).unsqueeze(0)
+        positions = self.position_embed_layer(positions)  # expand(batch_size, -1, -1)
 
         return x + positions
 
@@ -78,23 +80,25 @@ class LandmarkEmbedding(nn.Module):
             in_channels=64, out_channels=128, kernel_size=11, stride=2, padding=padding
         )
         self.conv3_layer = nn.Conv1d(
-            in_channels=128, out_channels=256, kernel_size=11, stride=2, padding=padding
+            in_channels=128, out_channels=64, kernel_size=11, stride=2, padding=padding
         )
 
         # Output embedding layer
-        self.embedding_layer = nn.Linear(256, embedding_dim)
+        self.embedding_layer = nn.Linear(44, embedding_dim)
 
     def forward(self, x):
-        # Input x should have shape (batch_size, input_size, input_dim)
-        # x = x.unsqueeze(1)  # Add a channel dimension for 1D convolution
 
         # Apply convolutional layers with ReLU activation and stride 2
         x = torch.relu(self.conv1_layer(x))
         x = torch.relu(self.conv2_layer(x))
         x = torch.relu(self.conv3_layer(x))
 
+        # print(x.size())
+
         # Global average pooling to reduce spatial dimensions
-        x = torch.mean(x, dim=2)
+        # x = torch.mean(x, dim=2)
+
+        # print(x.size())
 
         # Apply the linear embedding layer
         x = self.embedding_layer(x)
@@ -322,9 +326,7 @@ class ASLTransformer(nn.Module):
             _description_
         """
         encoder_out = self.encoder(source)
-        decoder_input = (
-            torch.ones((1), dtype=torch.long).to(source.device) * target_start_token_idx
-        )
+        decoder_input = torch.ones((1), dtype=torch.long) * target_start_token_idx
         dec_logits = []
         for _ in range(self.target_maxlen - 1):
             decoder_out = self._decoder_run(encoder_out, decoder_input)

@@ -10,15 +10,16 @@ import torch
 import hydra
 
 from omegaconf import DictConfig
-from utils.tools import resume_training, set_seed
-from utils.logging import logger
-from models.model_loader import ModelLoader
-from dataset.dataset_loader import get_dataset, prepare_dataloader  # get_test_dataset
-from dataset.dataset_paths import get_dataset_paths
 from lightning import Trainer
-from trainer import LitModule, profiler
-from config import PROJECT_NAME
 from lightning.pytorch.loggers import WandbLogger
+from dataset.dataset_loader import get_dataset, prepare_dataloader
+from dataset.dataset_paths import get_dataset_paths
+from models.model_loader import ModelLoader
+from metrics import NormalizedLevenshteinDistance
+from trainer import LitModule, profiler
+from utils.logging import logger
+from utils.tools import resume_training, set_seed
+from config import PROJECT_NAME
 
 
 MAX_TRAIN_TIME = "00:06:00:00"
@@ -57,8 +58,9 @@ def load_train_objs(model_name):
     # Optimizes given model/function using TorchDynamo and specified backend
     torch.compile(model)
     criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
+    acc_metric = None
 
-    return model, criterion
+    return model, criterion, acc_metric
 
 
 @hydra.main(config_name="train", config_path="config", version_base="1.2")
@@ -80,7 +82,7 @@ def main(cfg: DictConfig):
 
         train_data_paths, valid_data_paths = get_dataset_paths(dev_mode=cfg.dev_mode)
 
-        model, criterion = load_train_objs(cfg.model_name)
+        model, criterion, _ = load_train_objs(cfg.model_name)
 
         logger.info("Initializing WANDB")
 
@@ -110,7 +112,7 @@ def main(cfg: DictConfig):
             model_name=cfg.model_name,
             model=model,
             loss_criterion=criterion,
-            metric=None,
+            acc_metric=NormalizedLevenshteinDistance,
             save_ckpt_every=cfg.params.save_every,
         )
         trainer = Trainer(

@@ -5,8 +5,6 @@ Functions:
 
 """
 
-# TODO implement loss and metrics
-
 import torch
 import lightning as L
 from lightning.pytorch.callbacks import (
@@ -17,7 +15,6 @@ from lightning.pytorch.callbacks import (
 from lightning.pytorch.profilers import SimpleProfiler
 
 # from utils.logging import logger
-# from metrics import NormalizedLevenshteinDistance
 
 # Checkpoint Filename Template
 FILENAME_TEMPLATE = "NSL-2-AUDIO-{epoch}-{val_loss:.2f}"
@@ -29,12 +26,12 @@ class LitModule(L.LightningModule):
     """_summary_"""
 
     def __init__(
-        self, model, loss_criterion, metric, save_ckpt_every=5, model_name="test"
+        self, model_name, model, loss_criterion, acc_metric, save_ckpt_every=5
     ):
         super().__init__()
         self.model = model
         self.loss_criterion = loss_criterion
-        self.metric = metric
+        self.accuracy_metric = acc_metric
         self.save_ckpt_every = save_ckpt_every
         self.checkpoint_dir = f"artifacts/{model_name}/"
         self.save_hyperparameters()
@@ -42,18 +39,21 @@ class LitModule(L.LightningModule):
     def _get_preds_loss_accuracy(self, batch):
         sources, targets = batch
         preds = self.model(sources, targets)
-        loss = self.loss_criterion(preds, sources)
-        # Levenshtein_dis = self.metric(oi)
-        return preds, loss
+        # loss = self.loss_criterion(preds, targets)
+        
+        acc_loss = self.accuracy_metric()
+        return loss, acc_loss, preds
 
     def training_step(self, batch, batch_idx):
-        preds, loss = self._get_preds_loss_accuracy(batch)
-        self.log("loss", loss)
+        loss, acc_loss, preds = self._get_preds_loss_accuracy(batch)
+
+        self.log("loss", loss, on_epoch=True, on_step=False)
         return loss
 
     def validation_step(self, batch, batch_idx):
-        preds, val_loss = self._get_preds_loss_accuracy(batch)
-        self.log("val_loss", val_loss)
+        val_loss, _, preds = self._get_preds_loss_accuracy(batch)
+
+        self.log("val_loss", val_loss, on_epoch=True, on_step=False)
         return preds
 
     def configure_optimizers(self):
