@@ -1,5 +1,5 @@
 """
-Baseline Transformer Module
+Baseline Transformer Module 
 
 This module contains the implementation of a Transformer model for sign language tasks.
 
